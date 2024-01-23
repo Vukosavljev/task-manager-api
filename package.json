@@ -2,10 +2,23 @@
   "name": "task-manager-api",
   "version": "1.0.0",
   "description": "",
-  "main": "app.ts",
+  "main": "dist/app.js",
   "scripts": {
+    "start": "node ./dist/app.js",
+    "dev": "nodemon ./src/app",
     "test": "npm run test"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.5",
+    "nodemon": "^3.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.2",
+    "express": "^4.18.2"
+  }
 }
