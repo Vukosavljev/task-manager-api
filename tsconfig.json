@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "baseUrl": "src",
+    "baseUrl": "./src",
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es6",
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist",
+    "outDir": "./dist",
     "paths": {
       "@routes": ["routes/*"],
       "@controllers": ["controllers/*"]
