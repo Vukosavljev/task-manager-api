@@ -30,3 +30,14 @@ export const updateTask = (req, res) => {
     tasks,
   });
 };
+
+export const deleteTask = (req, res) => {
+  const {
+    params: { id },
+  } = req;
+  console.log(id);
+  res.status(200).json({
+    success: true,
+    tasks,
+  });
+};
