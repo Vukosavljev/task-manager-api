@@ -11,8 +11,20 @@ export const getTasks = (req, res) => {
 };
 
 export const createTask = (req, res) => {
-  const task = req.body;
+  const { task } = req.body;
   tasks.push(task);
+  res.status(200).json({
+    success: true,
+    tasks,
+  });
+};
+
+export const updateTask = (req, res) => {
+  const {
+    body: { task },
+    params: { id },
+  } = req;
+  console.log(task, id);
   res.status(200).json({
     success: true,
     tasks,
