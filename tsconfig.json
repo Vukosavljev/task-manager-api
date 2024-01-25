@@ -6,11 +6,7 @@
     "target": "es6",
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "./dist",
-    "paths": {
-      "@routes": ["routes/*"],
-      "@controllers": ["controllers/*"]
-    }
+    "outDir": "./dist"
   },
   "lib": ["es2015"]
 }

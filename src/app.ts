@@ -1,14 +1,16 @@
-import path from "path";
+import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import express from "express";
+import path from "path";
 import tasks from "./routes";
 
 dotenv.config({ path: "./config/config.env" });
 const app = express();
 
-app.use("/api/tasks", tasks);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-console.log(123);
+app.use("/api/tasks", tasks);
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, "./views", "404.html"));
 });
