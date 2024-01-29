@@ -9,7 +9,7 @@ export class Task implements TaskModel {
   constructor(title, description, id?) {
     this.title = title;
     this.description = description;
-    this._id = new ObjectId(id);
+    this._id = id ? new ObjectId(id) : null;
   }
 
   save() {
@@ -45,6 +45,14 @@ export class Task implements TaskModel {
       .collection("tasks")
       .find({ _id: new ObjectId(taskId) })
       .next()
+      .catch((e) => console.log(e));
+  }
+
+  static delete(taskId: string) {
+    const db = getDB();
+    return db
+      .collection("tasks")
+      .deleteOne({ _id: new ObjectId(taskId) })
       .catch((e) => console.log(e));
   }
 }

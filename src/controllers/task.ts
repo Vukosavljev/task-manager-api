@@ -1,7 +1,5 @@
 import { Task, TaskModel } from "../models/task.model";
 
-const tasks: TaskModel[] = [];
-
 export const getTasks = (_, res) => {
   Task.fetchAll().then((taskResponse: TaskModel[]) => {
     res.status(200).json({
@@ -28,10 +26,10 @@ export const createTask = (req, res) => {
     task: { title, description },
   } = req.body;
 
-  new Task(title, description).save().then((newTask: TaskModel) => {
-    res.status(200).json({
+  new Task(title, description).save().then((creationResponse) => {
+    res.status(201).json({
       success: true,
-      newTask,
+      createdTaskId: creationResponse.insertedId,
     });
   });
 };
@@ -56,9 +54,11 @@ export const deleteTask = (req, res) => {
   const {
     params: { id },
   } = req;
-  console.log(id);
-  res.status(200).json({
-    success: true,
-    tasks,
+
+  Task.delete(id).then((deleteResponse) => {
+    res.status(200).json({
+      success: true,
+      message: deleteResponse.deletedCount,
+    });
   });
 };
