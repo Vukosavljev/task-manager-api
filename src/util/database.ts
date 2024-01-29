@@ -4,7 +4,7 @@ let _db;
 
 const mongoConnect = (cb) => {
   MongoClient.connect(
-    "mongodb+srv://MongoDBUserTasksApi:XAPEmGU9mwUFvENK@tasks-api.qolemm3.mongodb.net/?retryWrites=true&w=majority"
+    "mongodb+srv://@tasks-api.qolemm3.mongodb.net/?retryWrites=true&w=majority"
   )
     .then((client) => {
       _db = client.db();
