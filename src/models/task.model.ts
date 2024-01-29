@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import { getDB } from "../util/database";
 
-export class Task {
+export class Task implements TaskModel {
   title: string;
   description: string;
   _id: ObjectId;
@@ -52,6 +52,8 @@ export class Task {
 export interface TaskModel {
   title: string;
   description: string;
+  _id: ObjectId;
+  // userId: string;
   //   dueDate: Date
   //   status: string
   //   priority: string

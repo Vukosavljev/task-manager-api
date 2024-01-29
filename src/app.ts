@@ -2,8 +2,8 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import express from "express";
 import path from "path";
-import tasks from "./routes";
 import mongoConnect from "./util/database";
+import { taskRoutes, userRoutes } from "./routes";
 
 dotenv.config({ path: "./config/config.env" });
 const app = express();
@@ -11,7 +11,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use("/api/tasks", tasks);
+app.use("/api/tasks", taskRoutes);
+app.use("/api/users", userRoutes);
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, "./views", "404.html"));
 });
