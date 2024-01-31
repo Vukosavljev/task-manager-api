@@ -1,5 +1,5 @@
-import { ObjectId } from "mongodb";
-import { Schema, model } from "mongoose";
+import { ObjectId } from 'mongodb';
+import { Schema, model } from 'mongoose';
 
 const TaskSchema = new Schema({
   title: {
@@ -7,6 +7,7 @@ const TaskSchema = new Schema({
     required: true,
   },
   description: String,
+  userId: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
 export interface TaskModel {
@@ -19,4 +20,4 @@ export interface TaskModel {
   //   priority: string
 }
 
-export default model("Task", TaskSchema);
+export default model('Task', TaskSchema);

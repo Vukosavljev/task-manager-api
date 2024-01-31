@@ -1,6 +1,4 @@
-// import { Task, TaskModel } from "../models/task.model";
-
-import Task from "../models/task.model";
+import Task from '../models/task.model';
 
 export const getTasks = (_, res) => {
   Task.find().then((task) => {
@@ -29,7 +27,7 @@ export const createTask = (req, res) => {
     task: { title, description },
   } = req.body;
 
-  new Task({ title, description }).save().then((task) => {
+  new Task({ title, description, userId: req.user }).save().then((task) => {
     res.status(201).json({
       success: true,
       data: task,
