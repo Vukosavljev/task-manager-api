@@ -3,10 +3,11 @@
 import Task from "../models/task.model";
 
 export const getTasks = (_, res) => {
-  Task.find().then((taskResponse) => {
+  Task.find().then((task) => {
     res.status(200).json({
       success: true,
-      tasks: taskResponse,
+      results: task.length,
+      data: task,
     });
   });
 };
@@ -18,7 +19,7 @@ export const getTask = (req, res) => {
   Task.findById(id).then((tasks) => {
     res.status(200).json({
       success: true,
-      tasks,
+      data: tasks,
     });
   });
 };
@@ -31,7 +32,7 @@ export const createTask = (req, res) => {
   new Task({ title, description }).save().then((task) => {
     res.status(201).json({
       success: true,
-      task,
+      data: task,
     });
   });
 };
@@ -47,7 +48,7 @@ export const updateTask = (req, res) => {
   Task.findByIdAndUpdate(id, { title, description }).then((task) => {
     res.status(200).json({
       success: false,
-      task,
+      data: task,
     });
   });
 };
@@ -60,7 +61,7 @@ export const deleteTask = (req, res) => {
   Task.findByIdAndDelete(id).then((task) => {
     res.status(200).json({
       success: true,
-      task,
+      data: task,
     });
   });
 };
