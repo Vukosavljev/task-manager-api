@@ -2,8 +2,8 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import express from "express";
 import path from "path";
-import mongoConnect from "./util/database";
 import { taskRoutes, userRoutes } from "./routes";
+import mongoose from "mongoose";
 
 dotenv.config({ path: "./config/config.env" });
 const app = express();
@@ -19,10 +19,14 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT;
 
-mongoConnect(() => {
-  app.listen(PORT, () =>
-    console.log(
-      `Server is running on port ${PORT} in ${process.env.NODE_ENV} mode.`
-    )
-  );
-});
+mongoose
+  .connect(
+    "mongodb+srv://MongoDBUserTasksApi:XAPEmGU9mwUFvENK@tasks-api.qolemm3.mongodb.net/?retryWrites=true&w=majority"
+  )
+  .then(() => {
+    app.listen(PORT, () =>
+      console.log(
+        `Server is running on port ${PORT} in ${process.env.NODE_ENV} mode.`
+      )
+    );
+  });

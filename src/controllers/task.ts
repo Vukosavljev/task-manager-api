@@ -1,7 +1,9 @@
-import { Task, TaskModel } from "../models/task.model";
+// import { Task, TaskModel } from "../models/task.model";
+
+import Task from "../models/task.model";
 
 export const getTasks = (_, res) => {
-  Task.fetchAll().then((taskResponse: TaskModel[]) => {
+  Task.find().then((taskResponse) => {
     res.status(200).json({
       success: true,
       tasks: taskResponse,
@@ -13,10 +15,10 @@ export const getTask = (req, res) => {
   const {
     params: { id },
   } = req;
-  Task.findById(id).then((taskResponse: TaskModel[]) => {
+  Task.findById(id).then((tasks) => {
     res.status(200).json({
       success: true,
-      tasks: taskResponse,
+      tasks,
     });
   });
 };
@@ -26,10 +28,10 @@ export const createTask = (req, res) => {
     task: { title, description },
   } = req.body;
 
-  new Task(title, description).save().then((creationResponse) => {
+  new Task({ title, description }).save().then((task) => {
     res.status(201).json({
       success: true,
-      createdTaskId: creationResponse.insertedId,
+      task,
     });
   });
 };
@@ -42,10 +44,10 @@ export const updateTask = (req, res) => {
     params: { id },
   } = req;
 
-  new Task(title, description, id).save().then((updatedTask: TaskModel) => {
+  Task.findByIdAndUpdate(id, { title, description }).then((task) => {
     res.status(200).json({
-      success: true,
-      updatedTask,
+      success: false,
+      task,
     });
   });
 };
@@ -55,10 +57,10 @@ export const deleteTask = (req, res) => {
     params: { id },
   } = req;
 
-  Task.delete(id).then((deleteResponse) => {
+  Task.findByIdAndDelete(id).then((task) => {
     res.status(200).json({
       success: true,
-      message: deleteResponse.deletedCount,
+      task,
     });
   });
 };
