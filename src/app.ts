@@ -31,7 +31,7 @@ const PORT = process.env.PORT;
 
 mongoose
   .connect(
-    'mongodb+srv://MongoDBUserTasksApi:XAPEmGU9mwUFvENK@tasks-api.qolemm3.mongodb.net/?retryWrites=true&w=majority'
+    'mongodb+srv://@tasks-api.qolemm3.mongodb.net/?retryWrites=true&w=majority'
   )
   .then(() => {
     User.findOne().then((user) => {
