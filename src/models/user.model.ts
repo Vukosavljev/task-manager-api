@@ -1,5 +1,5 @@
-import { ObjectId } from "mongodb";
-import { Schema, model } from "mongoose";
+import { ObjectId } from 'mongodb';
+import { Schema, model } from 'mongoose';
 
 const userSchema = new Schema({
   name: { type: String, required: true },
@@ -12,4 +12,4 @@ export interface UserModel {
   _id: ObjectId;
 }
 
-export default model("User", userSchema);
+export default model('User', userSchema);

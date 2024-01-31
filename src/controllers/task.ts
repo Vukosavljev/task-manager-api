@@ -1,41 +1,42 @@
+import { Response } from 'express';
 import Task from '../models/task.model';
+import { IUserInfoRequest } from 'types';
 
-export const getTasks = (_, res) => {
-  Task.find().then((task) => {
-    res.status(200).json({
-      success: true,
-      results: task.length,
-      data: task,
-    });
+export const getTasks = async (_: IUserInfoRequest, res: Response) => {
+  const task = await Task.find();
+
+  res.status(200).json({
+    success: true,
+    results: task.length,
+    data: task,
   });
 };
 
-export const getTask = (req, res) => {
+export const getTask = async (req: IUserInfoRequest, res: Response) => {
   const {
     params: { id },
   } = req;
-  Task.findById(id).then((tasks) => {
-    res.status(200).json({
-      success: true,
-      data: tasks,
-    });
+
+  const tasks = await Task.findById(id);
+  res.status(200).json({
+    success: true,
+    data: tasks,
   });
 };
 
-export const createTask = (req, res) => {
+export const createTask = async (req: IUserInfoRequest, res: Response) => {
   const {
     task: { title, description },
   } = req.body;
 
-  new Task({ title, description, userId: req.user }).save().then((task) => {
-    res.status(201).json({
-      success: true,
-      data: task,
-    });
+  const task = await new Task({ title, description, userId: req.user }).save();
+  res.status(201).json({
+    success: true,
+    data: task,
   });
 };
 
-export const updateTask = (req, res) => {
+export const updateTask = async (req: IUserInfoRequest, res: Response) => {
   const {
     body: {
       task: { title, description },
@@ -43,23 +44,21 @@ export const updateTask = (req, res) => {
     params: { id },
   } = req;
 
-  Task.findByIdAndUpdate(id, { title, description }).then((task) => {
-    res.status(200).json({
-      success: false,
-      data: task,
-    });
+  const task = await Task.findByIdAndUpdate(id, { title, description });
+  res.status(200).json({
+    success: false,
+    data: task,
   });
 };
 
-export const deleteTask = (req, res) => {
+export const deleteTask = async (req: IUserInfoRequest, res: Response) => {
   const {
     params: { id },
   } = req;
 
-  Task.findByIdAndDelete(id).then((task) => {
-    res.status(200).json({
-      success: true,
-      data: task,
-    });
+  const task = await Task.findByIdAndDelete(id);
+  res.status(200).json({
+    success: true,
+    data: task,
   });
 };
