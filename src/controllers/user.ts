@@ -1,18 +1,31 @@
-export const register = (req, res) => {
-  const {
-    body: { name, email, password },
-  } = req;
-  res.send({ name, email, password });
+import { Response } from 'express';
+import { IUserInfoRequest } from 'types';
+import User from '../models/user.model';
+
+export const register = async (req: IUserInfoRequest, res: Response) => {
+  const { body } = req;
+  const { name, email, password } = body;
+  try {
+    const user = await new User({ name, email, password }).save();
+    const token = user.getJwtToken();
+    res.status(200).json({ success: true, token });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      success: false,
+      message: error,
+    });
+  }
 };
 
-export const login = (req, res) => {
+export const login = (req: IUserInfoRequest, res: Response) => {
   const {
     body: { email, password },
   } = req;
   res.send({ email, password });
 };
 
-export const logout = (req, res) => {
+export const logout = (req: IUserInfoRequest, res: Response) => {
   const {
     body: { email },
   } = req;
