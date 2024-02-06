@@ -1,10 +1,33 @@
-import { Router } from "express";
-import { login, logout, register } from "../controllers";
+import { Router } from 'express';
+import { login, logout, register } from '../controllers';
+import { body } from 'express-validator';
+import {
+  EMAIL_REQUIRED_ERROR_MESSAGE,
+  EMAIL_VALIDITY_ERROR_MESSAGE,
+  PASSWORD_MIN_LENGTH_ERROR_MESSAGE,
+} from '../constants';
 
 const router = Router();
 
-router.post("/register", register);
-router.post("/login", login);
-router.post("/logout", logout);
+router.post(
+  '/register',
+  body('email')
+    .isEmail()
+    .withMessage(EMAIL_VALIDITY_ERROR_MESSAGE)
+    .notEmpty()
+    .withMessage(EMAIL_REQUIRED_ERROR_MESSAGE),
+  body('password')
+    .isLength({ min: 8 })
+    .withMessage(PASSWORD_MIN_LENGTH_ERROR_MESSAGE)
+    .notEmpty()
+    .withMessage('MISTAKE')
+    .custom((val, a) => {
+      console.log({ val }, a);
+      return true;
+    }),
+  register
+);
+router.post('/login', login);
+router.post('/logout', logout);
 
 export default router;

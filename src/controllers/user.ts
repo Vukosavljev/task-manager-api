@@ -1,10 +1,18 @@
 import { Response } from 'express';
 import { IUserInfoRequest } from 'types';
 import User from '../models/user.model';
+import { validationResult } from 'express-validator';
 
 export const register = async (req: IUserInfoRequest, res: Response) => {
   const { body } = req;
   const { name, email, password } = body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      success: false,
+      errors,
+    });
+  }
   try {
     const user = await new User({ name, email, password }).save();
     const token = user.getJwtToken();

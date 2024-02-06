@@ -1,20 +1,25 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Document, Schema, model } from 'mongoose';
+import {
+  EMAIL_REQUIRED_ERROR_MESSAGE,
+  EMAIL_VALIDITY_ERROR_MESSAGE,
+  PASSWORD_MIN_LENGTH_ERROR_MESSAGE,
+} from '../constants';
 import validator from 'validator';
 
 const userSchema = new Schema({
   name: { type: String, required: [true, 'Please enter your name.'] },
   email: {
     type: String,
-    required: [true, 'Please enter your email.'],
+    required: [true, EMAIL_REQUIRED_ERROR_MESSAGE],
     unique: true,
-    validate: [validator.isEmail, 'Please enter valid email address.'],
+    validate: [validator.isEmail, EMAIL_VALIDITY_ERROR_MESSAGE],
   },
   password: {
     type: String,
     required: [true, 'Please enter your password.'],
-    minLength: [8, 'Your password must be at least 8 characters long.'],
+    minLength: [8, PASSWORD_MIN_LENGTH_ERROR_MESSAGE],
     selected: false,
   },
 });
