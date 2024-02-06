@@ -4,6 +4,7 @@ import { body } from 'express-validator';
 import {
   EMAIL_REQUIRED_ERROR_MESSAGE,
   EMAIL_VALIDITY_ERROR_MESSAGE,
+  NAME_REQUIRED_ERROR_MESSAGE,
   PASSWORD_MIN_LENGTH_ERROR_MESSAGE,
 } from '../constants';
 
@@ -11,6 +12,7 @@ const router = Router();
 
 router.post(
   '/register',
+  body('name').notEmpty().withMessage(NAME_REQUIRED_ERROR_MESSAGE),
   body('email')
     .isEmail()
     .withMessage(EMAIL_VALIDITY_ERROR_MESSAGE)
@@ -19,8 +21,6 @@ router.post(
   body('password')
     .isLength({ min: 8 })
     .withMessage(PASSWORD_MIN_LENGTH_ERROR_MESSAGE)
-    .notEmpty()
-    .withMessage('MISTAKE')
     .custom((val, a) => {
       console.log({ val }, a);
       return true;

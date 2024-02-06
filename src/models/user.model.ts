@@ -4,12 +4,13 @@ import { Document, Schema, model } from 'mongoose';
 import {
   EMAIL_REQUIRED_ERROR_MESSAGE,
   EMAIL_VALIDITY_ERROR_MESSAGE,
+  NAME_REQUIRED_ERROR_MESSAGE,
   PASSWORD_MIN_LENGTH_ERROR_MESSAGE,
 } from '../constants';
 import validator from 'validator';
 
 const userSchema = new Schema({
-  name: { type: String, required: [true, 'Please enter your name.'] },
+  name: { type: String, required: [true, NAME_REQUIRED_ERROR_MESSAGE] },
   email: {
     type: String,
     required: [true, EMAIL_REQUIRED_ERROR_MESSAGE],
@@ -18,7 +19,7 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    required: [true, 'Please enter your password.'],
+    required: [true, PASSWORD_MIN_LENGTH_ERROR_MESSAGE],
     minLength: [8, PASSWORD_MIN_LENGTH_ERROR_MESSAGE],
     selected: false,
   },
