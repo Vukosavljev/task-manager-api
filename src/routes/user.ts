@@ -1,37 +1,19 @@
 import { Router } from 'express';
 import { login, logout, register } from '../controllers';
-import User from '../models/user.model';
-import { body } from 'express-validator';
 import {
-  EMAIL_EXIST_ERROR_MESSAGE,
-  EMAIL_REQUIRED_ERROR_MESSAGE,
-  EMAIL_VALIDITY_ERROR_MESSAGE,
-  NAME_REQUIRED_ERROR_MESSAGE,
-  PASSWORD_MIN_LENGTH_ERROR_MESSAGE,
-} from '../constants';
+  emailValidators,
+  nameValidators,
+  passwordValidators,
+} from '../validators';
 
 const router = Router();
 
 router.post(
   '/register',
-  body('name').trim().notEmpty().withMessage(NAME_REQUIRED_ERROR_MESSAGE),
-  body('email')
-    .trim()
-    .normalizeEmail()
-    .isEmail()
-    .withMessage(EMAIL_VALIDITY_ERROR_MESSAGE)
-    .notEmpty()
-    .withMessage(EMAIL_REQUIRED_ERROR_MESSAGE)
-    .custom(async (email: string) => {
-      const user = await User.findOne({ email });
-      if (user) return Promise.reject(EMAIL_EXIST_ERROR_MESSAGE);
-    }),
-  body('password')
-    .isLength({ min: 8 })
-    .withMessage(PASSWORD_MIN_LENGTH_ERROR_MESSAGE),
+  [nameValidators, emailValidators, passwordValidators],
   register
 );
-router.post('/login', login);
+router.post('/login', [emailValidators, passwordValidators], login);
 router.post('/logout', logout);
 
 export default router;
