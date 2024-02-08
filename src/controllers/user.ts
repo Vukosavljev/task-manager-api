@@ -7,6 +7,7 @@ export const register = async (req: IUserInfoRequest, res: Response) => {
   const { body } = req;
   const { name, email, password } = body;
   const errors = validationResult(req);
+
   if (!errors.isEmpty()) {
     return res.status(422).json({
       success: false,

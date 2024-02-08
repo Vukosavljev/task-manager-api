@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Document, Schema, model } from 'mongoose';
 import {
+  EMAIL_EXIST_ERROR_MESSAGE,
   EMAIL_REQUIRED_ERROR_MESSAGE,
   EMAIL_VALIDITY_ERROR_MESSAGE,
   NAME_REQUIRED_ERROR_MESSAGE,
@@ -14,7 +15,7 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: [true, EMAIL_REQUIRED_ERROR_MESSAGE],
-    unique: true,
+    unique: [true, EMAIL_EXIST_ERROR_MESSAGE],
     validate: [validator.isEmail, EMAIL_VALIDITY_ERROR_MESSAGE],
   },
   password: {
