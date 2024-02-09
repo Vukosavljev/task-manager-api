@@ -1,19 +1,20 @@
 import { Router } from 'express';
 import { login, logout, register } from '../controllers';
 import {
-  emailValidators,
+  registerEmailValidators,
   nameValidators,
   passwordValidators,
+  loginEmailValidators,
 } from '../validators';
 
 const router = Router();
 
 router.post(
   '/register',
-  [nameValidators, emailValidators, passwordValidators],
+  [nameValidators, registerEmailValidators, passwordValidators],
   register
 );
-router.post('/login', [emailValidators, passwordValidators], login);
+router.post('/login', [loginEmailValidators, passwordValidators], login);
 router.post('/logout', logout);
 
 export default router;

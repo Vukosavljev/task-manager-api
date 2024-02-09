@@ -6,7 +6,7 @@ import {
 import User from '../models/user.model';
 import { body } from 'express-validator';
 
-export const emailValidators = body('email')
+export const registerEmailValidators = body('email')
   .trim()
   .normalizeEmail()
   .isEmail()
@@ -17,3 +17,11 @@ export const emailValidators = body('email')
     const user = await User.findOne({ email });
     if (user) return Promise.reject(EMAIL_EXIST_ERROR_MESSAGE);
   });
+
+export const loginEmailValidators = body('email')
+  .trim()
+  .normalizeEmail()
+  .isEmail()
+  .withMessage(EMAIL_VALIDITY_ERROR_MESSAGE)
+  .notEmpty()
+  .withMessage(EMAIL_REQUIRED_ERROR_MESSAGE);

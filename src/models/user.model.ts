@@ -42,10 +42,15 @@ userSchema.methods.getJwtToken = function () {
   );
 };
 
+userSchema.methods.comparePassword = async function (enteredPassword: string) {
+  return bcrypt.compare(enteredPassword, this.password);
+};
+
 export interface UserModel extends Document {
   name: string;
   email: string;
   password: string;
   getJwtToken: () => string;
+  comparePassword: (...args: [string]) => Promise<boolean>;
 }
 export default model<UserModel>('User', userSchema);
