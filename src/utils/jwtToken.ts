@@ -15,7 +15,7 @@ export const sendToken = (
   };
 
   if (process.env.NODE_ENV === 'prod') options.secure = true;
-  console.log('sendToken');
+
   res.status(statusCode).cookie('token', token, options).json({
     success: true,
     token,

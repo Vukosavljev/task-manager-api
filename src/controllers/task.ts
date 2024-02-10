@@ -29,7 +29,7 @@ export const createTask = async (req: IUserInfoRequest, res: Response) => {
     task: { title, description },
   } = req.body;
 
-  const task = await new Task({ title, description, userId: req.user }).save();
+  const task = await Task.create({ title, description, userId: req.user });
   res.status(201).json({
     success: true,
     data: task,

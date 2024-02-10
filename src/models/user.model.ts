@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Document, Schema, model } from 'mongoose';
+import validator from 'validator';
 import {
   EMAIL_EXIST_ERROR_MESSAGE,
   EMAIL_REQUIRED_ERROR_MESSAGE,
@@ -8,7 +9,7 @@ import {
   NAME_REQUIRED_ERROR_MESSAGE,
   PASSWORD_MIN_LENGTH_ERROR_MESSAGE,
 } from '../constants';
-import validator from 'validator';
+import { Token } from '../types';
 
 const userSchema = new Schema({
   name: { type: String, required: [true, NAME_REQUIRED_ERROR_MESSAGE] },
@@ -31,15 +32,12 @@ userSchema.pre('save', async function () {
 });
 
 userSchema.methods.getJwtToken = function () {
-  return jwt.sign(
-    {
-      id: this._id,
-    },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: process.env.JWT_EXPIRATION_TIME,
-    }
-  );
+  const token: Token = {
+    id: this._id,
+  };
+  return jwt.sign(token, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRATION_TIME,
+  });
 };
 
 userSchema.methods.comparePassword = async function (enteredPassword: string) {
