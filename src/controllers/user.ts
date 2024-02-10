@@ -3,6 +3,7 @@ import { IUserInfoRequest } from 'types';
 import User from '../models/user.model';
 import { validationResult } from 'express-validator';
 import { INVALID_EMAIL_OR_PASSWORD } from '../constants';
+import { sendToken } from '../utils';
 
 export const register = async (req: IUserInfoRequest, res: Response) => {
   const { name, email, password } = req.body;
@@ -15,9 +16,8 @@ export const register = async (req: IUserInfoRequest, res: Response) => {
   }
 
   try {
-    const user = await new User({ name, email, password }).save();
-    const token = user.getJwtToken();
-    res.status(200).json({ success: true, data: user, token });
+    const user = await User.create({ name, email, password });
+    sendToken(user, 201, res);
   } catch (error) {
     console.log(error);
     res.status(400).json({
@@ -38,6 +38,7 @@ export const login = async (req: IUserInfoRequest, res: Response) => {
   }
 
   const user = await User.findOne({ email });
+  console.log({ user });
   if (!user) {
     return res
       .status(401)
@@ -45,14 +46,21 @@ export const login = async (req: IUserInfoRequest, res: Response) => {
   }
 
   const isPasswordCorrect = await user.comparePassword(password);
+  console.log({ isPasswordCorrect });
   if (!isPasswordCorrect) {
     return res
       .status(401)
       .json({ success: false, error: INVALID_EMAIL_OR_PASSWORD });
   }
-  console.log(isPasswordCorrect);
-
-  res.json({ email, password });
+  try {
+    sendToken(user, 201, res);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      success: false,
+      message: error,
+    });
+  }
 };
 
 export const logout = (req: IUserInfoRequest, res: Response) => {
