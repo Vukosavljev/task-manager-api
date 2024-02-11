@@ -15,13 +15,20 @@ export const isAuthenticated = async (
   }
 
   if (!token)
-    res.status(401).json({
+    return res.status(401).json({
       success: false,
       message: 'Login first to access this resource.',
     });
 
-  const decoded = jwt.verify(token, process.env.JWT_SECRET) as Token;
-  req.user = await User.findById(decoded.id);
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET) as Token;
+    req.user = await User.findById(decoded.id);
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: 'Login first to access this resource.',
+    });
+  }
 
   next();
 };
