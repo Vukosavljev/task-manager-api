@@ -19,7 +19,6 @@ export const register = async (req: IUserInfoRequest, res: Response) => {
     const user = await User.create({ name, email, password });
     sendToken(user, 201, res);
   } catch (error) {
-    console.log(error);
     res.status(400).json({
       success: false,
       message: error,
@@ -53,7 +52,6 @@ export const login = async (req: IUserInfoRequest, res: Response) => {
   try {
     sendToken(user, 201, res);
   } catch (error) {
-    console.log(error);
     res.status(400).json({
       success: false,
       message: error,

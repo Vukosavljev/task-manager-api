@@ -1,6 +1,6 @@
 import { NextFunction, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { IUserInfoRequest, Token } from '../types';
+import { IUserInfoRequest, JWTPayload } from '../types';
 import User from '../models/user.model';
 
 export const isAuthenticated = async (
@@ -8,11 +8,11 @@ export const isAuthenticated = async (
   res: Response,
   next: NextFunction
 ) => {
+  const authHeader = req.headers.authorization;
   let token: string;
 
-  if (req.headers.authorization?.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1];
-  }
+  if (req.headers.authorization?.startsWith('Bearer '))
+    token = authHeader.substring(7, authHeader.length);
 
   if (!token)
     return res.status(401).json({
@@ -21,7 +21,7 @@ export const isAuthenticated = async (
     });
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET) as Token;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET) as JWTPayload;
     req.user = await User.findById(decoded.id);
   } catch (error) {
     return res.status(401).json({

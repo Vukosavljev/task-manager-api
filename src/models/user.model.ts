@@ -9,7 +9,7 @@ import {
   NAME_REQUIRED_ERROR_MESSAGE,
   PASSWORD_MIN_LENGTH_ERROR_MESSAGE,
 } from '../constants';
-import { Token } from '../types';
+import { JWTPayload } from '../types';
 
 const userSchema = new Schema({
   name: { type: String, required: [true, NAME_REQUIRED_ERROR_MESSAGE] },
@@ -32,7 +32,7 @@ userSchema.pre('save', async function () {
 });
 
 userSchema.methods.getJwtToken = function () {
-  const token: Token = {
+  const token: JWTPayload = {
     id: this._id,
   };
   return jwt.sign(token, process.env.JWT_SECRET, {

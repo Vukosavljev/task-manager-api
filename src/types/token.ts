@@ -1,3 +1,3 @@
-export type Token = {
+export type JWTPayload = {
   id: string;
 };
