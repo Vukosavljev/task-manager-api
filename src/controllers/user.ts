@@ -37,8 +37,7 @@ export const login = async (req: IUserInfoRequest, res: Response) => {
     });
   }
 
-  const user = await User.findOne({ email });
-  console.log({ user });
+  const user = await User.findOne({ email }).select('+password');
   if (!user) {
     return res
       .status(401)
@@ -46,7 +45,6 @@ export const login = async (req: IUserInfoRequest, res: Response) => {
   }
 
   const isPasswordCorrect = await user.comparePassword(password);
-  console.log({ isPasswordCorrect });
   if (!isPasswordCorrect) {
     return res
       .status(401)

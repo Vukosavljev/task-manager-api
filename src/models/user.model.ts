@@ -23,7 +23,7 @@ const userSchema = new Schema({
     type: String,
     required: [true, PASSWORD_MIN_LENGTH_ERROR_MESSAGE],
     minLength: [8, PASSWORD_MIN_LENGTH_ERROR_MESSAGE],
-    selected: false,
+    select: false,
   },
 });
 
