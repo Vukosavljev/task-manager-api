@@ -4,10 +4,10 @@ import { isAuthenticated } from '../middlewares';
 
 const router = Router();
 
-router.get('/:id', TaskControllers.getTask);
-router.get('/', TaskControllers.getTasks);
+router.get('/:id', isAuthenticated, TaskControllers.getTask);
+router.get('/', isAuthenticated, TaskControllers.getTasks);
 router.post('/', isAuthenticated, TaskControllers.createTask);
-router.patch('/:id', TaskControllers.updateTask);
-router.delete('/:id', TaskControllers.deleteTask);
+router.patch('/:id', isAuthenticated, TaskControllers.updateTask);
+router.delete('/:id', isAuthenticated, TaskControllers.deleteTask);
 
 export default router;

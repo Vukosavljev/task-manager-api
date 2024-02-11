@@ -2,8 +2,8 @@ import { Response } from 'express';
 import Task from '../models/task.model';
 import { IUserInfoRequest } from 'types';
 
-export const getTasks = async (_: IUserInfoRequest, res: Response) => {
-  const task = await Task.find();
+export const getTasks = async (req: IUserInfoRequest, res: Response) => {
+  const task = await Task.find({ userId: req.user._id });
 
   res.status(200).json({
     success: true,
@@ -17,7 +17,7 @@ export const getTask = async (req: IUserInfoRequest, res: Response) => {
     params: { id },
   } = req;
 
-  const tasks = await Task.findById(id);
+  const tasks = await Task.find({ _id: id, userId: req.user._id });
   res.status(200).json({
     success: true,
     data: tasks,
@@ -25,9 +25,7 @@ export const getTask = async (req: IUserInfoRequest, res: Response) => {
 };
 
 export const createTask = async (req: IUserInfoRequest, res: Response) => {
-  const {
-    task: { title, description },
-  } = req.body;
+  const { title, description } = req.body;
 
   const task = await Task.create({ title, description, userId: req.user });
   res.status(201).json({
@@ -38,15 +36,15 @@ export const createTask = async (req: IUserInfoRequest, res: Response) => {
 
 export const updateTask = async (req: IUserInfoRequest, res: Response) => {
   const {
-    body: {
-      task: { title, description },
-    },
+    body: { title, description },
     params: { id },
   } = req;
-
-  const task = await Task.findByIdAndUpdate(id, { title, description });
+  // { title, description }
+  const task = await Task.find({ _id: id, userId: req.user._id });
+  // What to do when we don't find task with id and userId
+  console.log(task);
   res.status(200).json({
-    success: false,
+    success: true,
     data: task,
   });
 };
