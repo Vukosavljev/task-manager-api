@@ -1,6 +1,6 @@
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import express, { Response } from 'express';
+import express, { NextFunction, Response } from 'express';
 import mongoose from 'mongoose';
 import path from 'path';
 import { IUserInfoRequest } from 'types';
@@ -11,11 +11,19 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use((_: IUserInfoRequest, res: Response, next: NextFunction) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'OPTIONS, GET, POST, PUT, PATCH, DELETE'
+  );
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 
 app.use('/api/tasks', taskRoutes);
 app.use('/api/users', userRoutes);
-
-app.use((req: IUserInfoRequest, res: Response) => {
+app.use((_: IUserInfoRequest, res: Response) => {
   res.status(404).sendFile(path.join(__dirname, './views', '404.html'));
 });
 
