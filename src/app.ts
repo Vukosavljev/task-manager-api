@@ -7,7 +7,7 @@ import { taskRoutes, userRoutes } from './routes';
 import { connectToDB } from './utils';
 
 dotenv.config({ path: './config/config.env' });
-const app = express();
+export const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
