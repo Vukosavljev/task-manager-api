@@ -1,2 +1,2 @@
-export * from './jwtToken';
+export * from './jwt.util';
 export * from './connectToDB';
