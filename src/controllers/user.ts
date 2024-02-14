@@ -50,7 +50,7 @@ export const login = async (req: IUserInfoRequest, res: Response) => {
       .json({ success: false, error: INVALID_EMAIL_OR_PASSWORD });
   }
   try {
-    sendToken(user, 201, res);
+    sendToken(user, 200, res);
   } catch (error) {
     res.status(400).json({
       success: false,
@@ -59,9 +59,31 @@ export const login = async (req: IUserInfoRequest, res: Response) => {
   }
 };
 
-export const logout = (req: IUserInfoRequest, res: Response) => {
-  const {
-    body: { email },
-  } = req;
+export const logout = async (req: IUserInfoRequest, res: Response) => {
+  const { email } = req.body;
   res.send({ email });
+};
+
+export const remove = async (req: IUserInfoRequest, res: Response) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email }).select('+password');
+  if (!user) {
+    return res
+      .status(401)
+      .json({ success: false, error: INVALID_EMAIL_OR_PASSWORD });
+  }
+
+  const isPasswordCorrect = await user.comparePassword(password);
+  if (!isPasswordCorrect) {
+    return res
+      .status(401)
+      .json({ success: false, error: INVALID_EMAIL_OR_PASSWORD });
+  }
+
+  try {
+    await user.deleteOne();
+    return res.status(200).json({ success: true, message: 'User deleted' });
+  } catch (error) {
+    res.json({ success: true, error });
+  }
 };

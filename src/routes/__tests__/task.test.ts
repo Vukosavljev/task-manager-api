@@ -1,7 +1,7 @@
 import { app } from '../../app';
 import supertest from 'supertest';
 
-describe('Tasks', () => {
+describe('Task routes', () => {
   const userData = {
     email: 'userForTesting@gmail.com',
     password: 'userForTestingPassword',

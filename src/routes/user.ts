@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { login, logout, register } from '../controllers';
+import { login, logout, register, remove } from '../controllers';
 import {
   registerEmailValidators,
   nameValidators,
@@ -16,5 +16,6 @@ router.post(
 );
 router.post('/login', [loginEmailValidators, passwordValidators], login);
 router.post('/logout', logout);
+router.delete('/remove', [loginEmailValidators, passwordValidators], remove);
 
 export default router;
