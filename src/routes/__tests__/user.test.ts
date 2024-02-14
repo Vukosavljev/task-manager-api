@@ -84,4 +84,13 @@ describe('User routes', () => {
       expect(statusCode).toBe(401);
     });
   });
+
+  describe('/api/users/logout POST', () => {
+    it('should logout user', async () => {
+      // TBD
+      // const { body, statusCode } = await supertest(app)
+      //   .post('/api/users/logout')
+      //   .send();
+    });
+  });
 });
