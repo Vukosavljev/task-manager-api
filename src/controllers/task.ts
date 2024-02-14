@@ -36,7 +36,7 @@ export const createTask = async (req: IUserInfoRequest, res: Response) => {
 
 export const updateTask = async (req: IUserInfoRequest, res: Response) => {
   const {
-    body: { title, description },
+    // body: { title, description },
     params: { id },
   } = req;
   // { title, description }
