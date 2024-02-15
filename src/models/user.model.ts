@@ -6,13 +6,13 @@ import {
   EMAIL_EXIST_ERROR_MESSAGE,
   EMAIL_REQUIRED_ERROR_MESSAGE,
   EMAIL_VALIDITY_ERROR_MESSAGE,
-  NAME_REQUIRED_ERROR_MESSAGE,
+  USER_NAME_REQUIRED_ERROR_MESSAGE,
   PASSWORD_MIN_LENGTH_ERROR_MESSAGE,
 } from '../constants';
 import { JWTPayload } from '../types';
 
 const userSchema = new Schema({
-  name: { type: String, required: [true, NAME_REQUIRED_ERROR_MESSAGE] },
+  name: { type: String, required: [true, USER_NAME_REQUIRED_ERROR_MESSAGE] },
   email: {
     type: String,
     required: [true, EMAIL_REQUIRED_ERROR_MESSAGE],
