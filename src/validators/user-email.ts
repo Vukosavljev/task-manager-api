@@ -2,7 +2,7 @@ import {
   EMAIL_EXIST_ERROR_MESSAGE,
   EMAIL_REQUIRED_ERROR_MESSAGE,
   EMAIL_VALIDITY_ERROR_MESSAGE,
-} from '../constants';
+} from '@constants';
 import User from '../models/user.model';
 import { body } from 'express-validator';
 

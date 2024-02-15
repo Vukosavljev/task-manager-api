@@ -1,9 +1,9 @@
 import { Response } from 'express';
-import { IUserInfoRequest } from 'types';
+import { IUserInfoRequest } from '@types';
 import User from '../models/user.model';
 import { validationResult } from 'express-validator';
-import { INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE } from '../constants';
-import { sendToken } from '../utils';
+import { INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE } from '@constants';
+import { sendToken } from '@utils';
 
 export const register = async (req: IUserInfoRequest, res: Response) => {
   const { name, email, password } = req.body;

@@ -2,9 +2,9 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import express, { NextFunction, Response } from 'express';
 import path from 'path';
-import { IUserInfoRequest } from 'types';
-import { taskRoutes, userRoutes } from './routes';
-import { connectToDB } from './utils';
+import { IUserInfoRequest } from '@types';
+import { taskRoutes, userRoutes } from '@routes';
+import { connectToDB } from '@utils';
 
 dotenv.config({ path: './config/config.env' });
 export const app = express();

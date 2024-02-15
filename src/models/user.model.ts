@@ -8,8 +8,8 @@ import {
   EMAIL_VALIDITY_ERROR_MESSAGE,
   USER_NAME_REQUIRED_ERROR_MESSAGE,
   PASSWORD_MIN_LENGTH_ERROR_MESSAGE,
-} from '../constants';
-import { JWTPayload } from '../types';
+} from '@constants';
+import { JWTPayload } from '@types';
 
 const userSchema = new Schema({
   name: { type: String, required: [true, USER_NAME_REQUIRED_ERROR_MESSAGE] },

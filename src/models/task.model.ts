@@ -1,10 +1,11 @@
+import { TASK_TITLE_REQUIRED_ERROR_MESSAGE } from '@constants';
 import { ObjectId } from 'mongodb';
 import { Schema, model } from 'mongoose';
 
 const TaskSchema = new Schema({
   title: {
     type: String,
-    required: true,
+    required: [true, TASK_TITLE_REQUIRED_ERROR_MESSAGE],
   },
   description: String,
   userId: { type: Schema.Types.ObjectId, ref: 'User' },

@@ -1,8 +1,8 @@
 import { NextFunction, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { IUserInfoRequest, JWTPayload } from '../types';
+import { IUserInfoRequest, JWTPayload } from '@types';
 import User from '../models/user.model';
-import { USER_NOT_LOGGED_IN__ERROR_MESSAGE } from '../constants';
+import { USER_NOT_LOGGED_IN__ERROR_MESSAGE } from '@constants';
 
 export const isAuthenticated = async (
   req: IUserInfoRequest,

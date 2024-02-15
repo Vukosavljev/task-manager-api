@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { login, logout, register, remove } from '../controllers';
+import { login, logout, register, remove } from '@controllers';
 import {
   registerEmailValidators,
   nameValidators,
   passwordValidators,
   loginEmailValidators,
-} from '../validators';
+} from '@validators';
 
 const router = Router();
 
