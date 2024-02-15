@@ -15,6 +15,7 @@
       "@types": ["./types"],
       "@utils": ["./utils"],
       "@validators": ["./validators"],
+      "@middlewares": ["./middlewares"],
     },
   },
   "lib": ["es2015"],
