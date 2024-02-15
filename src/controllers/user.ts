@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { IUserInfoRequest } from 'types';
 import User from '../models/user.model';
 import { validationResult } from 'express-validator';
-import { INVALID_EMAIL_OR_PASSWORD } from '../constants';
+import { INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE } from '../constants';
 import { sendToken } from '../utils';
 
 export const register = async (req: IUserInfoRequest, res: Response) => {
@@ -40,14 +40,14 @@ export const login = async (req: IUserInfoRequest, res: Response) => {
   if (!user) {
     return res
       .status(401)
-      .json({ success: false, error: INVALID_EMAIL_OR_PASSWORD });
+      .json({ success: false, error: INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE });
   }
 
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
     return res
       .status(401)
-      .json({ success: false, error: INVALID_EMAIL_OR_PASSWORD });
+      .json({ success: false, error: INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE });
   }
   try {
     sendToken(user, 200, res);
@@ -70,14 +70,14 @@ export const remove = async (req: IUserInfoRequest, res: Response) => {
   if (!user) {
     return res
       .status(401)
-      .json({ success: false, error: INVALID_EMAIL_OR_PASSWORD });
+      .json({ success: false, error: INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE });
   }
 
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
     return res
       .status(401)
-      .json({ success: false, error: INVALID_EMAIL_OR_PASSWORD });
+      .json({ success: false, error: INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE });
   }
 
   try {

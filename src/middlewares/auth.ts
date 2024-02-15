@@ -2,6 +2,7 @@ import { NextFunction, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { IUserInfoRequest, JWTPayload } from '../types';
 import User from '../models/user.model';
+import { USER_NOT_LOGGED_IN__ERROR_MESSAGE } from '../constants';
 
 export const isAuthenticated = async (
   req: IUserInfoRequest,
@@ -17,7 +18,7 @@ export const isAuthenticated = async (
   if (!token)
     return res.status(401).json({
       success: false,
-      message: 'Login first to access this resource.',
+      message: USER_NOT_LOGGED_IN__ERROR_MESSAGE,
     });
 
   try {
@@ -26,7 +27,7 @@ export const isAuthenticated = async (
   } catch (error) {
     return res.status(401).json({
       success: false,
-      message: 'Login first to access this resource.',
+      message: USER_NOT_LOGGED_IN__ERROR_MESSAGE,
     });
   }
 

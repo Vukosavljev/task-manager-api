@@ -1,4 +1,4 @@
-import { INVALID_EMAIL_OR_PASSWORD } from '../../constants';
+import { INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE } from '../../constants';
 import { app } from '../../app';
 import supertest from 'supertest';
 
@@ -60,7 +60,7 @@ describe('User routes', () => {
 
       expect(body.success).toBe(false);
       expect(body.token).toBeUndefined();
-      expect(body.error).toBe(INVALID_EMAIL_OR_PASSWORD);
+      expect(body.error).toBe(INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE);
       expect(statusCode).toBe(401);
     });
     it('should NOT login user with bad email format', async () => {
@@ -80,7 +80,7 @@ describe('User routes', () => {
 
       expect(body.success).toBe(false);
       expect(body.token).toBeUndefined();
-      expect(body.error).toBe(INVALID_EMAIL_OR_PASSWORD);
+      expect(body.error).toBe(INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE);
       expect(statusCode).toBe(401);
     });
   });
