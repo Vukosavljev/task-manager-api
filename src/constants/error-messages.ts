@@ -12,3 +12,5 @@ export const USER_NOT_LOGGED_IN_ERROR_MESSAGE =
   'Login first to access this resource.';
 export const USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE =
   "Sorry user with this email doesn't exist.";
+export const INVALID_RESET_TOKEN_ERROR_MESSAGE =
+  'Password reset token is invalid.';

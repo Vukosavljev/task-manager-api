@@ -25,6 +25,6 @@ router.post('/login', [loginEmailValidators, passwordValidators], login);
 router.post('/logout', logout);
 router.delete('/remove', [loginEmailValidators, passwordValidators], remove);
 router.post('/forgot-password', [loginEmailValidators], forgotPassword);
-router.post('/reset-password/:resetPasswordToken', resetPassword);
+router.post('/reset-password/:token', [passwordValidators], resetPassword);
 
 export default router;

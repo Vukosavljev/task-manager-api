@@ -4,9 +4,10 @@ import User from '../models/user.model';
 import { validationResult } from 'express-validator';
 import {
   INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE,
+  INVALID_RESET_TOKEN_ERROR_MESSAGE,
   USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE,
 } from '@constants';
-import { sendEmail, sendToken } from '@utils';
+import { hashToken, sendEmail, sendToken } from '@utils';
 
 export const register = async (req: IUserInfoRequest, res: Response) => {
   const { name, email, password } = req.body;
@@ -116,7 +117,6 @@ export const forgotPassword = async (req: IUserInfoRequest, res: Response) => {
       .status(200)
       .json({ success: true, message: `Email sent to ${user.email}` });
   } catch (error) {
-    console.log(error);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
 
@@ -125,11 +125,32 @@ export const forgotPassword = async (req: IUserInfoRequest, res: Response) => {
 };
 
 export const resetPassword = async (req: IUserInfoRequest, res: Response) => {
-  const { resetPasswordToken } = req.params;
-  const user = await User.findOne({ resetPasswordToken });
+  const { password } = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      success: false,
+      errors: errors.array(),
+    });
+  }
 
-  res.status(200).json({
-    success: true,
-    message: [user, resetPasswordToken],
+  const { token } = req.params;
+  const hashedToken = hashToken(token);
+  const user = await User.findOne({
+    resetPasswordToken: hashedToken,
+    resetPasswordExpire: { $gt: Date.now() },
   });
+
+  if (!user)
+    return res
+      .status(400)
+      .json({ success: false, message: INVALID_RESET_TOKEN_ERROR_MESSAGE });
+
+  user.password = password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+
+  await user.save();
+
+  sendToken(user, 200, res);
 };
