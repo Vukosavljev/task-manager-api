@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import * as crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { Document, Schema, model } from 'mongoose';
 import validator from 'validator';
@@ -25,9 +26,13 @@ const userSchema = new Schema({
     minLength: [8, PASSWORD_MIN_LENGTH_ERROR_MESSAGE],
     select: false,
   },
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
 });
 
-userSchema.pre('save', async function () {
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) next();
+
   this.password = await bcrypt.hash(this.password, 10);
 });
 
@@ -44,11 +49,25 @@ userSchema.methods.comparePassword = async function (enteredPassword: string) {
   return bcrypt.compare(enteredPassword, this.password);
 };
 
+userSchema.methods.getResetPasswordToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  this.resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  this.resetPasswordExpire = Date.now() + 30 * 60 * 1000;
+
+  return resetToken;
+};
+
 export interface UserModel extends Document {
   name: string;
   email: string;
   password: string;
+  resetPasswordToken: string;
   getJwtToken: () => string;
   comparePassword: (...args: [string]) => Promise<boolean>;
+  getResetPasswordToken: () => string;
 }
 export default model<UserModel>('User', userSchema);
