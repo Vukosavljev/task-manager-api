@@ -93,26 +93,34 @@ export const remove = async (req: IUserInfoRequest, res: Response) => {
 
 export const forgotPassword = async (req: IUserInfoRequest, res: Response) => {
   const { email } = req.body;
-  const user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ email });
 
   if (!user)
     return res
       .status(404)
       .json({ success: false, error: USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE });
   const resetPasswordToken = user.getResetPasswordToken();
-  user.save({ validateBeforeSave: false });
+  await user.save({ validateBeforeSave: false });
 
   const resetUrl = `${req.protocol}://${req.get('host')}/api/users/reset-password/${resetPasswordToken}`;
-  sendEmail({
-    subject: 'Subject',
-    html: `<h1>Hello dear ${user.name}</h1>
-    <p>If you want to reset you password here is the link - ${resetUrl}, if not please ignore this email.</p>`,
-    to: user.email,
-  });
 
-  res
-    .status(200)
-    .json({ success: true, message: `Email sent to ${user.email}` });
+  try {
+    sendEmail({
+      subject: 'Task Api - recovery password',
+      html: `<h1>Hello dear ${user.name}</h1>
+      <p>If you want to reset your password here is the link - <b>${resetUrl}</b>, if not please ignore this email.</p>`,
+      to: user.email,
+    });
+
+    res
+      .status(200)
+      .json({ success: true, message: `Email sent to ${user.email}` });
+  } catch (error) {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save({ validateBeforeSave: false });
+  }
 };
 
 export const resetPassword = async (req: IUserInfoRequest, res: Response) => {

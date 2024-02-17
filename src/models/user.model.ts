@@ -66,6 +66,7 @@ export interface UserModel extends Document {
   email: string;
   password: string;
   resetPasswordToken: string;
+  resetPasswordExpire: Date;
   getJwtToken: () => string;
   comparePassword: (...args: [string]) => Promise<boolean>;
   getResetPasswordToken: () => string;
