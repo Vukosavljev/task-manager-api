@@ -1,5 +1,4 @@
 import bcrypt from 'bcryptjs';
-
 import jwt from 'jsonwebtoken';
 import { Document, Schema, model } from 'mongoose';
 import validator from 'validator';
@@ -38,11 +37,13 @@ userSchema.pre('save', async function (next) {
 });
 
 userSchema.methods.getJwtToken = function () {
+  const { JWT_SECRET, JWT_EXPIRATION_TIME } = process.env;
   const token: JWTPayload = {
     id: this._id,
   };
-  return jwt.sign(token, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRATION_TIME,
+
+  return jwt.sign(token, JWT_SECRET, {
+    expiresIn: JWT_EXPIRATION_TIME,
   });
 };
 

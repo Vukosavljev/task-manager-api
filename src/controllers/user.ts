@@ -53,14 +53,8 @@ export const login = async (req: IUserInfoRequest, res: Response) => {
       .status(401)
       .json({ success: false, error: INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE });
   }
-  try {
-    sendToken(user, 200, res);
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error,
-    });
-  }
+
+  sendToken(user, 200, res);
 };
 
 export const logout = async (req: IUserInfoRequest, res: Response) => {
@@ -88,7 +82,7 @@ export const remove = async (req: IUserInfoRequest, res: Response) => {
     await user.deleteOne();
     return res.status(200).json({ success: true, message: 'User deleted' });
   } catch (error) {
-    res.json({ success: true, error });
+    res.json({ success: false, error });
   }
 };
 
@@ -96,10 +90,12 @@ export const forgotPassword = async (req: IUserInfoRequest, res: Response) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
 
-  if (!user)
+  if (!user) {
     return res
       .status(404)
       .json({ success: false, error: USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE });
+  }
+
   const resetPasswordToken = user.getResetPasswordToken();
   await user.save({ validateBeforeSave: false });
 
@@ -141,10 +137,11 @@ export const resetPassword = async (req: IUserInfoRequest, res: Response) => {
     resetPasswordExpire: { $gt: Date.now() },
   });
 
-  if (!user)
+  if (!user) {
     return res
       .status(400)
       .json({ success: false, message: INVALID_RESET_TOKEN_ERROR_MESSAGE });
+  }
 
   user.password = password;
   user.resetPasswordToken = undefined;
