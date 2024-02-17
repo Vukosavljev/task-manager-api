@@ -2,7 +2,10 @@ import { Response } from 'express';
 import { IUserInfoRequest } from '@types';
 import User from '../models/user.model';
 import { validationResult } from 'express-validator';
-import { INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE } from '@constants';
+import {
+  INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE,
+  USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE,
+} from '@constants';
 import { sendToken } from '@utils';
 
 export const register = async (req: IUserInfoRequest, res: Response) => {
@@ -11,7 +14,7 @@ export const register = async (req: IUserInfoRequest, res: Response) => {
   if (!errors.isEmpty()) {
     return res.status(422).json({
       success: false,
-      errors,
+      errors: errors.array(),
     });
   }
 
@@ -32,7 +35,7 @@ export const login = async (req: IUserInfoRequest, res: Response) => {
   if (!errors.isEmpty()) {
     return res.status(422).json({
       success: false,
-      errors,
+      errors: errors.array(),
     });
   }
 
@@ -86,4 +89,17 @@ export const remove = async (req: IUserInfoRequest, res: Response) => {
   } catch (error) {
     res.json({ success: true, error });
   }
+};
+
+export const resetPassword = async (req: IUserInfoRequest, res: Response) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+
+  if (!user)
+    return res
+      .status(404)
+      .json({ success: false, error: USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE });
+  const token = user.getResetPasswordToken();
+  console.log(token);
+  res.send({ user });
 };
