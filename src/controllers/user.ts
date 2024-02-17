@@ -116,6 +116,7 @@ export const forgotPassword = async (req: IUserInfoRequest, res: Response) => {
       .status(200)
       .json({ success: true, message: `Email sent to ${user.email}` });
   } catch (error) {
+    console.log(error);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
 
@@ -124,9 +125,11 @@ export const forgotPassword = async (req: IUserInfoRequest, res: Response) => {
 };
 
 export const resetPassword = async (req: IUserInfoRequest, res: Response) => {
-  console.log(req.query);
+  const { resetPasswordToken } = req.params;
+  const user = await User.findOne({ resetPasswordToken });
+
   res.status(200).json({
     success: true,
-    message: `Hello`,
+    message: [user, resetPasswordToken],
   });
 };

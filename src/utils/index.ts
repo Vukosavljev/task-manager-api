@@ -1,3 +1,4 @@
 export * from './connectToDB';
-export * from './jwt.util';
+export * from './sendJWT';
 export * from './sendEmail';
+export * from './token';

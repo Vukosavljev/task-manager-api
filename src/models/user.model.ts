@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import * as crypto from 'crypto';
+
 import jwt from 'jsonwebtoken';
 import { Document, Schema, model } from 'mongoose';
 import validator from 'validator';
@@ -11,6 +11,7 @@ import {
   PASSWORD_MIN_LENGTH_ERROR_MESSAGE,
 } from '@constants';
 import { JWTPayload } from '@types';
+import { getRandomToken, hashToken } from '@utils';
 
 const userSchema = new Schema({
   name: { type: String, required: [true, USER_NAME_REQUIRED_ERROR_MESSAGE] },
@@ -50,15 +51,12 @@ userSchema.methods.comparePassword = async function (enteredPassword: string) {
 };
 
 userSchema.methods.getResetPasswordToken = function () {
-  const resetToken = crypto.randomBytes(32).toString('hex');
-  this.resetPasswordToken = crypto
-    .createHash('sha256')
-    .update(resetToken)
-    .digest('hex');
+  const token = getRandomToken();
+  this.resetPasswordToken = hashToken(token);
 
   this.resetPasswordExpire = Date.now() + 30 * 60 * 1000;
 
-  return resetToken;
+  return token;
 };
 
 export interface UserModel extends Document {
