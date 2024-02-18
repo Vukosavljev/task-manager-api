@@ -15,7 +15,7 @@ import {
   USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE,
 } from '@constants';
 import { hashToken, sendEmail, sendToken } from '@utils';
-import User from '../models/user.model';
+import User from '../models/userModel';
 
 export const register = async (
   req: IUserInfoRequest<object, object, RequestRegisterBody>,

@@ -11,6 +11,7 @@ module.exports = {
   moduleNameMapper: {
     '^@routes': '<rootDir>/src/routes/$1',
     '^@controllers': '<rootDir>/src/controllers/$1',
+    '^@models': '<rootDir>/src/models/$1',
     '^@constants': '<rootDir>/src/constants/$1',
     '^@utils': '<rootDir>/src/utils/$1',
     '^@validators': '<rootDir>/src/validators/$1',

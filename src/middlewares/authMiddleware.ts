@@ -2,7 +2,7 @@ import { NextFunction, Response } from 'express';
 import { verify } from 'jsonwebtoken';
 import { USER_NOT_LOGGED_IN_ERROR_MESSAGE } from '@constants';
 import { IUserInfoRequest, JWTPayload } from '@types';
-import User from '../models/user.model';
+import User from '../models/userModel';
 
 export const isAuthenticated = async (
   req: IUserInfoRequest,

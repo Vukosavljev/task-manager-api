@@ -1,5 +1,5 @@
 import { CookieOptions, Response } from 'express';
-import { UserModel } from '../models/user.model';
+import { UserModel } from '../models/userModel';
 
 export const sendToken = (
   user: UserModel,

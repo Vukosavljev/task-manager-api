@@ -1,2 +1,2 @@
-export { default as Task, TaskModel } from './task.model';
-export { default as User, UserModel } from './user.model';
+export { default as Task, TaskModel } from './taskModel';
+export { default as User, UserModel } from './userModel';
