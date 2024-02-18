@@ -30,6 +30,6 @@ export type IUserInfoRequest<
   ResBody = object,
   ReqBody = object,
   ReqQuery = object,
-> = {
+> = Request<Params, ResBody, ReqBody, ReqQuery> & {
   user: UserModel;
-} & Request<Params, ResBody, ReqBody, ReqQuery>;
+};

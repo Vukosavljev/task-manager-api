@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { validationResult } from 'express-validator';
-import { UserModel } from 'models/user.model';
+import { IUserInfoRequest } from '@types';
 
-export const validate = <T extends Request>(
-  req: T & { user: UserModel },
+export const validate = (
+  req: IUserInfoRequest,
   res: Response,
   next: NextFunction
 ) => {

@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { verify } from 'jsonwebtoken';
 import { USER_NOT_LOGGED_IN_ERROR_MESSAGE } from '@constants';
-import { JWTPayload } from '@types';
-import User, { UserModel } from '../models/user.model';
+import { IUserInfoRequest, JWTPayload } from '@types';
+import User from '../models/user.model';
 
-export const isAuthenticated = async <T extends Request>(
-  req: T & { user: UserModel },
+export const isAuthenticated = async (
+  req: IUserInfoRequest,
   res: Response,
   next: NextFunction
 ) => {

@@ -9,12 +9,14 @@ router.get('/:id', isAuthenticated, TaskControllers.getTask);
 router.get('/', isAuthenticated, TaskControllers.getTasks);
 router.post(
   '/',
-  [isAuthenticated, titleValidators],
+  isAuthenticated,
+  [titleValidators],
   TaskControllers.createTask
 );
 router.patch(
   '/:id',
-  [isAuthenticated, titleValidators],
+  isAuthenticated,
+  [titleValidators],
   TaskControllers.updateTask
 );
 router.delete('/:id', isAuthenticated, TaskControllers.deleteTask);
