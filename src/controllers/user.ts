@@ -1,6 +1,15 @@
 import { Response } from 'express';
 import { validationResult } from 'express-validator';
-import { IUserInfoRequest } from '@types';
+import {
+  IUserInfoRequest,
+  RequestForgotPasswordBody,
+  RequestLoginBody,
+  RequestLogoutBody,
+  RequestRegisterBody,
+  RequestRemoveUserBody,
+  RequestResetPasswordBody,
+  RequestResetPasswordParams,
+} from '@types';
 import {
   INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE,
   INVALID_RESET_TOKEN_ERROR_MESSAGE,
@@ -9,7 +18,10 @@ import {
 import { hashToken, sendEmail, sendToken } from '@utils';
 import User from '../models/user.model';
 
-export const register = async (req: IUserInfoRequest, res: Response) => {
+export const register = async (
+  req: IUserInfoRequest<object, object, RequestRegisterBody>,
+  res: Response
+) => {
   const { name, email, password } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -30,7 +42,10 @@ export const register = async (req: IUserInfoRequest, res: Response) => {
   }
 };
 
-export const login = async (req: IUserInfoRequest, res: Response) => {
+export const login = async (
+  req: IUserInfoRequest<object, object, RequestLoginBody>,
+  res: Response
+) => {
   const { email, password } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -57,12 +72,18 @@ export const login = async (req: IUserInfoRequest, res: Response) => {
   sendToken(user, 200, res);
 };
 
-export const logout = async (req: IUserInfoRequest, res: Response) => {
+export const logout = async (
+  req: IUserInfoRequest<object, object, RequestLogoutBody>,
+  res: Response
+) => {
   const { email } = req.body;
   res.send({ email });
 };
 
-export const remove = async (req: IUserInfoRequest, res: Response) => {
+export const remove = async (
+  req: IUserInfoRequest<object, object, RequestRemoveUserBody>,
+  res: Response
+) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email }).select('+password');
   if (!user) {
@@ -86,7 +107,10 @@ export const remove = async (req: IUserInfoRequest, res: Response) => {
   }
 };
 
-export const forgotPassword = async (req: IUserInfoRequest, res: Response) => {
+export const forgotPassword = async (
+  req: IUserInfoRequest<object, object, RequestForgotPasswordBody>,
+  res: Response
+) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
 
@@ -120,7 +144,14 @@ export const forgotPassword = async (req: IUserInfoRequest, res: Response) => {
   }
 };
 
-export const resetPassword = async (req: IUserInfoRequest, res: Response) => {
+export const resetPassword = async (
+  req: IUserInfoRequest<
+    RequestResetPasswordParams,
+    object,
+    RequestResetPasswordBody
+  >,
+  res: Response
+) => {
   const { password } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

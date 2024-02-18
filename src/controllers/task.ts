@@ -1,5 +1,9 @@
 import { Response } from 'express';
-import { IUserInfoRequest } from '@types';
+import {
+  IUserInfoRequest,
+  RequestCreateTaskBody,
+  RequestTaskParams,
+} from '@types';
 import Task from '../models/task.model';
 
 export const getTasks = async (req: IUserInfoRequest, res: Response) => {
@@ -12,7 +16,10 @@ export const getTasks = async (req: IUserInfoRequest, res: Response) => {
   });
 };
 
-export const getTask = async (req: IUserInfoRequest, res: Response) => {
+export const getTask = async (
+  req: IUserInfoRequest<RequestTaskParams>,
+  res: Response
+) => {
   const {
     params: { id },
   } = req;
@@ -24,7 +31,10 @@ export const getTask = async (req: IUserInfoRequest, res: Response) => {
   });
 };
 
-export const createTask = async (req: IUserInfoRequest, res: Response) => {
+export const createTask = async (
+  req: IUserInfoRequest<object, object, RequestCreateTaskBody>,
+  res: Response
+) => {
   const { title, description } = req.body;
 
   const task = await Task.create({ title, description, userId: req.user });
@@ -34,7 +44,10 @@ export const createTask = async (req: IUserInfoRequest, res: Response) => {
   });
 };
 
-export const updateTask = async (req: IUserInfoRequest, res: Response) => {
+export const updateTask = async (
+  req: IUserInfoRequest<RequestTaskParams>,
+  res: Response
+) => {
   const {
     // body: { title, description },
     params: { id },
@@ -49,7 +62,10 @@ export const updateTask = async (req: IUserInfoRequest, res: Response) => {
   });
 };
 
-export const deleteTask = async (req: IUserInfoRequest, res: Response) => {
+export const deleteTask = async (
+  req: IUserInfoRequest<RequestTaskParams>,
+  res: Response
+) => {
   const {
     params: { id },
   } = req;

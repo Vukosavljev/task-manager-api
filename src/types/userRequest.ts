@@ -1,0 +1,35 @@
+import { Request } from 'express';
+import { UserModel } from 'models/user.model';
+
+export type RequestResetPasswordParams = { token: string };
+export type RequestRegisterBody = {
+  name: string;
+  email: string;
+  password: string;
+};
+export type RequestLoginBody = {
+  email: string;
+  password: string;
+};
+export type RequestLogoutBody = {
+  email: string;
+};
+export type RequestRemoveUserBody = {
+  email: string;
+  password: string;
+};
+export type RequestForgotPasswordBody = {
+  email: string;
+};
+export type RequestResetPasswordBody = {
+  password: string;
+};
+
+export type IUserInfoRequest<
+  Params = object,
+  ResBody = object,
+  ReqBody = object,
+  ReqQuery = object,
+> = {
+  user: UserModel;
+} & Request<Params, ResBody, ReqBody, ReqQuery>;
