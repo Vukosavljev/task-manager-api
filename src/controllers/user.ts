@@ -1,5 +1,4 @@
 import { Response } from 'express';
-import { validationResult } from 'express-validator';
 import {
   IUserInfoRequest,
   RequestForgotPasswordBody,
@@ -23,13 +22,6 @@ export const register = async (
   res: Response
 ) => {
   const { name, email, password } = req.body;
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).json({
-      success: false,
-      errors: errors.array(),
-    });
-  }
 
   try {
     const user = await User.create({ name, email, password });
@@ -47,13 +39,6 @@ export const login = async (
   res: Response
 ) => {
   const { email, password } = req.body;
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).json({
-      success: false,
-      errors: errors.array(),
-    });
-  }
 
   const user = await User.findOne({ email }).select('+password');
   if (!user) {
@@ -153,13 +138,6 @@ export const resetPassword = async (
   res: Response
 ) => {
   const { password } = req.body;
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).json({
-      success: false,
-      errors: errors.array(),
-    });
-  }
 
   const { token } = req.params;
   const hashedToken = hashToken(token);

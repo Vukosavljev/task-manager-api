@@ -1,30 +1,45 @@
 import { Router } from 'express';
-import {
-  forgotPassword,
-  login,
-  logout,
-  register,
-  remove,
-  resetPassword,
-} from '@controllers';
+import * as UserController from '@controllers';
 import {
   loginEmailValidators,
   nameValidators,
   passwordValidators,
   registerEmailValidators,
 } from '@validators';
+import { validate } from '@middlewares';
 
 const router = Router();
 
 router.post(
   '/register',
   [nameValidators, registerEmailValidators, passwordValidators],
-  register
+  validate,
+  UserController.register
 );
-router.post('/login', [loginEmailValidators, passwordValidators], login);
-router.post('/logout', logout);
-router.delete('/remove', [loginEmailValidators, passwordValidators], remove);
-router.post('/forgot-password', [loginEmailValidators], forgotPassword);
-router.post('/reset-password/:token', [passwordValidators], resetPassword);
+router.post(
+  '/login',
+  [loginEmailValidators, passwordValidators],
+  validate,
+  UserController.login
+);
+router.post('/logout', UserController.logout);
+router.delete(
+  '/remove',
+  [loginEmailValidators, passwordValidators],
+  validate,
+  UserController.remove
+);
+router.post(
+  '/forgot-password',
+  [loginEmailValidators],
+  validate,
+  UserController.forgotPassword
+);
+router.post(
+  '/reset-password/:token',
+  [passwordValidators],
+  validate,
+  UserController.resetPassword
+);
 
 export default router;
