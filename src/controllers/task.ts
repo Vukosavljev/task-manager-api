@@ -24,10 +24,10 @@ export const getTask = async (
     params: { id },
   } = req;
 
-  const tasks = await Task.find({ _id: id, userId: req.user._id });
+  const task = await Task.find({ _id: id, userId: req.user._id });
   res.status(200).json({
     success: true,
-    data: tasks,
+    data: task,
   });
 };
 
