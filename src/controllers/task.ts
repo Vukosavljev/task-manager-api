@@ -1,6 +1,6 @@
 import { Response } from 'express';
-import Task from '../models/task.model';
 import { IUserInfoRequest } from '@types';
+import Task from '../models/task.model';
 
 export const getTasks = async (req: IUserInfoRequest, res: Response) => {
   const task = await Task.find({ userId: req.user._id });

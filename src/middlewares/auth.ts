@@ -1,8 +1,8 @@
 import { NextFunction, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import { verify } from 'jsonwebtoken';
 import { IUserInfoRequest, JWTPayload } from '@types';
-import User from '../models/user.model';
 import { USER_NOT_LOGGED_IN_ERROR_MESSAGE } from '@constants';
+import User from '../models/user.model';
 
 export const isAuthenticated = async (
   req: IUserInfoRequest,
@@ -22,7 +22,7 @@ export const isAuthenticated = async (
     });
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET) as JWTPayload;
+    const decoded = verify(token, process.env.JWT_SECRET) as JWTPayload;
     req.user = await User.findById(decoded.id);
   } catch (error) {
     return res.status(401).json({

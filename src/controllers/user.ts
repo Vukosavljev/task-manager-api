@@ -1,13 +1,13 @@
 import { Response } from 'express';
-import { IUserInfoRequest } from '@types';
-import User from '../models/user.model';
 import { validationResult } from 'express-validator';
+import { IUserInfoRequest } from '@types';
 import {
   INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE,
   INVALID_RESET_TOKEN_ERROR_MESSAGE,
   USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE,
 } from '@constants';
 import { hashToken, sendEmail, sendToken } from '@utils';
+import User from '../models/user.model';
 
 export const register = async (req: IUserInfoRequest, res: Response) => {
   const { name, email, password } = req.body;

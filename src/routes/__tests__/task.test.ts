@@ -1,5 +1,5 @@
-import { app } from '../../app';
 import supertest from 'supertest';
+import { app } from '../../app';
 
 describe('Task routes', () => {
   const userData = {

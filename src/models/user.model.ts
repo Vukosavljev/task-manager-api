@@ -1,13 +1,13 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { Document, Schema, model } from 'mongoose';
-import validator from 'validator';
+import { Document, model, Schema } from 'mongoose';
+import { isEmail } from 'validator';
 import {
   EMAIL_EXIST_ERROR_MESSAGE,
   EMAIL_REQUIRED_ERROR_MESSAGE,
   EMAIL_VALIDITY_ERROR_MESSAGE,
-  USER_NAME_REQUIRED_ERROR_MESSAGE,
   PASSWORD_MIN_LENGTH_ERROR_MESSAGE,
+  USER_NAME_REQUIRED_ERROR_MESSAGE,
 } from '@constants';
 import { JWTPayload } from '@types';
 import { getRandomToken, hashToken } from '@utils';
@@ -18,7 +18,7 @@ const userSchema = new Schema({
     type: String,
     required: [true, EMAIL_REQUIRED_ERROR_MESSAGE],
     unique: [true, EMAIL_EXIST_ERROR_MESSAGE],
-    validate: [validator.isEmail, EMAIL_VALIDITY_ERROR_MESSAGE],
+    validate: [isEmail, EMAIL_VALIDITY_ERROR_MESSAGE],
   },
   password: {
     type: String,

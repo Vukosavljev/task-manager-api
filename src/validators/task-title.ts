@@ -1,5 +1,5 @@
-import { TASK_TITLE_REQUIRED_ERROR_MESSAGE } from '@constants';
 import { body } from 'express-validator';
+import { TASK_TITLE_REQUIRED_ERROR_MESSAGE } from '@constants';
 
 export const titleValidators = body('title')
   .trim()

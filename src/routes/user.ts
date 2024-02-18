@@ -1,17 +1,17 @@
 import { Router } from 'express';
 import {
-  resetPassword,
+  forgotPassword,
   login,
   logout,
   register,
   remove,
-  forgotPassword,
+  resetPassword,
 } from '@controllers';
 import {
-  registerEmailValidators,
+  loginEmailValidators,
   nameValidators,
   passwordValidators,
-  loginEmailValidators,
+  registerEmailValidators,
 } from '@validators';
 
 const router = Router();

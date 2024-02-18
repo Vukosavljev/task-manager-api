@@ -1,6 +1,6 @@
+import supertest from 'supertest';
 import { INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE } from '../../constants';
 import { app } from '../../app';
-import supertest from 'supertest';
 
 const userDataMock = {
   name: 'User name test',
@@ -91,6 +91,16 @@ describe('User routes', () => {
       // const { body, statusCode } = await supertest(app)
       //   .post('/api/users/logout')
       //   .send();
+    });
+  });
+  describe('/api/users/reset-password POST', () => {
+    beforeAll(async () => {
+      await supertest(app).post('/api/users/register').send(userDataMock);
+    });
+    it('should send email to user', async () => {
+      // const { body, statusCode } = await supertest(app)
+      //   .post('/api/users/reset-password')
+      //   .send({ email: userDataMock.email });
     });
   });
 });

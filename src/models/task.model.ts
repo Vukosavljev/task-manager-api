@@ -1,6 +1,6 @@
-import { TASK_TITLE_REQUIRED_ERROR_MESSAGE } from '@constants';
 import { ObjectId } from 'mongodb';
-import { Schema, model } from 'mongoose';
+import { model, Schema } from 'mongoose';
+import { TASK_TITLE_REQUIRED_ERROR_MESSAGE } from '@constants';
 
 const TaskSchema = new Schema({
   title: {

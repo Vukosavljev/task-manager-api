@@ -1,12 +1,12 @@
 import bodyParser from 'body-parser';
-import dotenv from 'dotenv';
+import { config } from 'dotenv';
 import express, { NextFunction, Response } from 'express';
 import path from 'path';
 import { IUserInfoRequest } from '@types';
 import { taskRoutes, userRoutes } from '@routes';
 import { connectToDB } from '@utils';
 
-dotenv.config({ path: './config/config.env' });
+config({ path: './config/config.env' });
 export const app = express();
 
 app.use(bodyParser.json());
