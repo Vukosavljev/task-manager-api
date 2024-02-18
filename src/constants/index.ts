@@ -1,1 +1,2 @@
-export * from './error-messages';
+export * from './errorMessages';
+export * from './successMessages';

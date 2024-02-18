@@ -11,9 +11,6 @@ export type RequestLoginBody = {
   email: string;
   password: string;
 };
-export type RequestLogoutBody = {
-  email: string;
-};
 export type RequestRemoveUserBody = {
   email: string;
   password: string;

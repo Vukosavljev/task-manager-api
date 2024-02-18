@@ -3,7 +3,6 @@ import {
   IUserInfoRequest,
   RequestForgotPasswordBody,
   RequestLoginBody,
-  RequestLogoutBody,
   RequestRegisterBody,
   RequestRemoveUserBody,
   RequestResetPasswordBody,
@@ -12,6 +11,8 @@ import {
 import {
   INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE,
   INVALID_RESET_TOKEN_ERROR_MESSAGE,
+  LOGGED_OUT_SUCCESS_MESSAGE,
+  USER_DELETE_SUCCESS_MESSAGE,
   USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE,
 } from '@constants';
 import { hashToken, sendEmail, sendToken } from '@utils';
@@ -57,12 +58,12 @@ export const login = async (
   sendToken(user, 200, res);
 };
 
-export const logout = async (
-  req: IUserInfoRequest<object, object, RequestLogoutBody>,
-  res: Response
-) => {
-  const { email } = req.body;
-  res.send({ email });
+export const logout = async (_: IUserInfoRequest, res: Response) => {
+  res.cookie('token', 'none', {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+  });
+  res.status(200).json({ success: true, message: LOGGED_OUT_SUCCESS_MESSAGE });
 };
 
 export const remove = async (
@@ -86,7 +87,9 @@ export const remove = async (
 
   try {
     await user.deleteOne();
-    return res.status(200).json({ success: true, message: 'User deleted' });
+    return res
+      .status(200)
+      .json({ success: true, message: USER_DELETE_SUCCESS_MESSAGE });
   } catch (error) {
     res.json({ success: false, error });
   }
