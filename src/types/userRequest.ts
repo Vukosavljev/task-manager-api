@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { UserModel } from 'models/user.model';
+import { UserModel } from '@models';
 
 export type RequestResetPasswordParams = { token: string };
 export type RequestRegisterBody = {

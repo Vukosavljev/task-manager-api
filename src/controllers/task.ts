@@ -4,7 +4,7 @@ import {
   RequestCreateTaskBody,
   RequestTaskParams,
 } from '@types';
-import Task from '../models/task.model';
+import { Task } from '@models';
 
 export const getTasks = async (req: IUserInfoRequest, res: Response) => {
   const task = await Task.find({ userId: req.user._id });

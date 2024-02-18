@@ -4,7 +4,7 @@ import {
   EMAIL_REQUIRED_ERROR_MESSAGE,
   EMAIL_VALIDITY_ERROR_MESSAGE,
 } from '@constants';
-import User from '../models/user.model';
+import { User } from '@models';
 
 export const registerEmailValidators = body('email')
   .trim()
