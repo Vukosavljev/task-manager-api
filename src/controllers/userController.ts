@@ -16,7 +16,7 @@ import {
   USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE,
 } from '@constants';
 import { hashToken, sendEmail, sendToken } from '@utils';
-import User from '../models/userModel';
+import { User } from '@models';
 
 export const register = async (
   req: IUserInfoRequest<object, object, RequestRegisterBody>,
@@ -141,8 +141,8 @@ export const resetPassword = async (
   res: Response
 ) => {
   const { password } = req.body;
-
   const { token } = req.params;
+
   const hashedToken = hashToken(token);
   const user = await User.findOne({
     resetPasswordToken: hashedToken,

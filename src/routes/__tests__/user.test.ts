@@ -14,6 +14,7 @@ const userDataMock = {
 };
 const nonExistingEmail = 'nonExisting@gmail.com';
 const wrongPassword = 'wrongPasswordExample';
+const newValidPassword = 'NewValidPassword';
 
 describe('User routes', () => {
   describe('/api/users/register POST', () => {
@@ -164,30 +165,42 @@ describe('User routes', () => {
   });
 
   describe('/api/users//reset-password/:token POST', () => {
+    let token;
     beforeAll(async () => {
       await supertest(app).post('/api/users/register').send(userDataMock);
+      await supertest(app)
+        .post('/api/users/forgot-password')
+        .send({ email: userDataMock.email });
+      const res = await supertest(app)
+        .post('/api/users')
+        .send({ email: userDataMock.email });
+      token = res.body.user.resetPasswordToken;
     });
     afterAll(async () => {
-      await supertest(app).delete('/api/users/remove').send(userDataMock);
+      await supertest(app)
+        .delete('/api/users/remove')
+        .send({ email: userDataMock.email, password: newValidPassword });
     });
     it('should NOT reset password without valid token', async () => {
       const { body, statusCode } = await supertest(app)
         .post('/api/users/reset-password/invalidToken')
-        .send({ password: 'NewValidPassword' });
-
+        .send({ password: newValidPassword });
       expect(body.success).toBe(false);
       expect(body.message).toBe(INVALID_RESET_TOKEN_ERROR_MESSAGE);
       expect(statusCode).toBe(400);
     });
-    // it('should reset password with valid token', async () => {
-    //   const { body, statusCode } = await supertest(app)
-    // TODO:find token
-    //     .post(`/api/users/reset-password/${token}`)
-    //     .send({ password: 'NewValidPassword' });
+    it.skip('should reset password with valid token', async () => {
+      jest.mock('../../utils', () => ({
+        hashToken: () => token,
+      }));
 
-    //   expect(body.success).toBe(true);
-    //   expect(body.message).toBe(INVALID_RESET_TOKEN_ERROR_MESSAGE);
-    //   expect(statusCode).toBe(200);
-    // });
+      const { body, statusCode } = await supertest(app)
+        .post(`/api/users/reset-password/${token}`)
+        .send({ password: newValidPassword });
+
+      expect(body.success).toBe(true);
+      expect(body.token).toBeDefined();
+      expect(statusCode).toBe(200);
+    });
   });
 });

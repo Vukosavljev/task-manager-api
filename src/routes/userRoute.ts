@@ -7,6 +7,7 @@ import {
   registerEmailValidators,
 } from '@validators';
 import { validate } from '@middlewares';
+import { User } from '@models';
 
 const router = Router();
 
@@ -41,5 +42,17 @@ router.post(
   validate,
   UserController.resetPassword
 );
+
+// Used only for unit-tests
+router.post('/', async (req, res) => {
+  if (process.env.NODE_ENV !== 'test') return;
+
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
 
 export default router;
