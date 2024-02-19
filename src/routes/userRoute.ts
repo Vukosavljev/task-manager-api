@@ -22,7 +22,7 @@ router.post(
   validate,
   UserController.login
 );
-router.post('/logout', UserController.logout);
+router.get('/logout', UserController.logout);
 router.delete(
   '/remove',
   [loginEmailValidators, passwordValidators],

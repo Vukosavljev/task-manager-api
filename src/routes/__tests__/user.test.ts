@@ -1,12 +1,19 @@
 import supertest from 'supertest';
-import { INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE } from '../../constants';
+import {
+  INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE,
+  INVALID_RESET_TOKEN_ERROR_MESSAGE,
+  LOGGED_OUT_SUCCESS_MESSAGE,
+  USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE,
+} from '@constants';
 import { app } from '../../app';
 
 const userDataMock = {
   name: 'User name test',
-  email: 'userForTesting@gmail.com',
+  email: 'testing@gmail.com',
   password: 'userForTestingPassword',
 };
+const nonExistingEmail = 'nonExisting@gmail.com';
+const wrongPassword = 'wrongPasswordExample';
 
 describe('User routes', () => {
   describe('/api/users/register POST', () => {
@@ -54,7 +61,7 @@ describe('User routes', () => {
       const { body, statusCode } = await supertest(app)
         .post('/api/users/login')
         .send({
-          email: 'nonExisting@gmail.com',
+          email: nonExistingEmail,
           password: userDataMock.password,
         });
 
@@ -76,7 +83,7 @@ describe('User routes', () => {
     it('should NOT login user with wrong password', async () => {
       const { body, statusCode } = await supertest(app)
         .post('/api/users/login')
-        .send({ email: userDataMock.email, password: 'wrongPassword' });
+        .send({ email: userDataMock.email, password: wrongPassword });
 
       expect(body.success).toBe(false);
       expect(body.token).toBeUndefined();
@@ -85,22 +92,102 @@ describe('User routes', () => {
     });
   });
 
-  describe('/api/users/logout POST', () => {
-    it('should logout user', async () => {
-      // TBD
-      // const { body, statusCode } = await supertest(app)
-      //   .post('/api/users/logout')
-      //   .send();
-    });
-  });
-  describe('/api/users/reset-password POST', () => {
+  describe('/api/users/logout GET', () => {
     beforeAll(async () => {
       await supertest(app).post('/api/users/register').send(userDataMock);
     });
-    it('should send email to user', async () => {
-      // const { body, statusCode } = await supertest(app)
-      //   .post('/api/users/reset-password')
-      //   .send({ email: userDataMock.email });
+    afterAll(async () => {
+      await supertest(app).delete('/api/users/remove').send(userDataMock);
     });
+    it('should logout user successfully', async () => {
+      const { body, statusCode } =
+        await supertest(app).get('/api/users/logout');
+      expect(body.success).toBe(true);
+      expect(body.token).toBeUndefined();
+      expect(body.message).toBe(LOGGED_OUT_SUCCESS_MESSAGE);
+      expect(statusCode).toBe(200);
+    });
+  });
+
+  describe('/api/users/remove DELETE', () => {
+    beforeAll(async () => {
+      await supertest(app).post('/api/users/register').send(userDataMock);
+    });
+    afterAll(async () => {
+      await supertest(app).delete('/api/users/remove').send(userDataMock);
+    });
+    it('should NOT delete user with wrong email', async () => {
+      const { body, statusCode } = await supertest(app)
+        .delete('/api/users/remove')
+        .send({ email: nonExistingEmail, password: userDataMock.password });
+
+      expect(body.success).toBe(false);
+      expect(body.error).toBe(INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE);
+      expect(statusCode).toBe(401);
+    });
+    it('should NOT delete user with wrong password', async () => {
+      const { body, statusCode } = await supertest(app)
+        .delete('/api/users/remove')
+        .send({ email: userDataMock.email, password: wrongPassword });
+
+      expect(body.success).toBe(false);
+      expect(body.error).toBe(INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE);
+      expect(statusCode).toBe(401);
+    });
+  });
+
+  describe('/api/users/forgot-password POST', () => {
+    beforeAll(async () => {
+      await supertest(app).post('/api/users/register').send(userDataMock);
+    });
+    afterAll(async () => {
+      await supertest(app).delete('/api/users/remove').send(userDataMock);
+    });
+    it('should NOT send email to user with wrong email', async () => {
+      const { body, statusCode } = await supertest(app)
+        .post('/api/users/forgot-password')
+        .send({ email: nonExistingEmail });
+
+      expect(body.success).toBe(false);
+      expect(body.error).toBe(USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE);
+      expect(statusCode).toBe(404);
+    });
+    it('should send email to user with correct email', async () => {
+      const { body, statusCode } = await supertest(app)
+        .post('/api/users/forgot-password')
+        .send({ email: userDataMock.email });
+
+      expect(body.success).toBe(true);
+      expect(body.message).toBe(`Email is sent to ${userDataMock.email}`);
+      expect(statusCode).toBe(200);
+    });
+  });
+
+  describe('/api/users//reset-password/:token POST', () => {
+    beforeAll(async () => {
+      await supertest(app).post('/api/users/register').send(userDataMock);
+    });
+    afterAll(async () => {
+      await supertest(app).delete('/api/users/remove').send(userDataMock);
+    });
+    it('should NOT reset password without valid token', async () => {
+      const { body, statusCode } = await supertest(app)
+        .post('/api/users/reset-password/invalidToken')
+        .send({ password: 'NewValidPassword' });
+
+      expect(body.success).toBe(false);
+      expect(body.message).toBe(INVALID_RESET_TOKEN_ERROR_MESSAGE);
+      expect(statusCode).toBe(400);
+    });
+    // it('should reset password with valid token', async () => {
+    //   const { body, statusCode } = await supertest(app)
+    // TODO:find token
+    //     .post(`/api/users/reset-password/${token}`)
+    //     .send({ password: 'NewValidPassword' });
+
+    //   expect(body.success).toBe(true);
+    //   expect(body.message).toBe(INVALID_RESET_TOKEN_ERROR_MESSAGE);
+    //   expect(statusCode).toBe(200);
+    // });
   });
 });
