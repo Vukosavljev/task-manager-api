@@ -1,5 +1,6 @@
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import {
+  HttpException,
   IUserInfoRequest,
   RequestForgotPasswordBody,
   RequestLoginBody,
@@ -9,6 +10,7 @@ import {
   RequestResetPasswordParams,
 } from '@types';
 import {
+  HTTP_STATUS_CODES,
   INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE,
   INVALID_RESET_TOKEN_ERROR_MESSAGE,
   LOGGED_OUT_SUCCESS_MESSAGE,
@@ -37,23 +39,28 @@ export const register = async (
 
 export const login = async (
   req: IUserInfoRequest<object, object, RequestLoginBody>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email }).select('+password');
-  if (!user) {
-    return res
-      .status(401)
-      .json({ success: false, error: INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE });
-  }
+  if (!user)
+    return next(
+      new HttpException(
+        INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE,
+        HTTP_STATUS_CODES.UNAUTHORIZED
+      )
+    );
 
   const isPasswordCorrect = await user.comparePassword(password);
-  if (!isPasswordCorrect) {
-    return res
-      .status(401)
-      .json({ success: false, error: INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE });
-  }
+  if (!isPasswordCorrect)
+    return next(
+      new HttpException(
+        INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE,
+        HTTP_STATUS_CODES.UNAUTHORIZED
+      )
+    );
 
   sendToken(user, 200, res);
 };
@@ -97,16 +104,19 @@ export const remove = async (
 
 export const forgotPassword = async (
   req: IUserInfoRequest<object, object, RequestForgotPasswordBody>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
 
-  if (!user) {
-    return res
-      .status(404)
-      .json({ success: false, error: USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE });
-  }
+  if (!user)
+    return next(
+      new HttpException(
+        USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE,
+        HTTP_STATUS_CODES.NOT_FOUND
+      )
+    );
 
   const resetPasswordToken = user.getResetPasswordToken();
   await user.save({ validateBeforeSave: false });

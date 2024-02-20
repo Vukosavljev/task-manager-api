@@ -37,7 +37,7 @@ describe('User routes', () => {
 
       expect(body.success).toBe(false);
       expect(body.token).toBeUndefined();
-      expect(body.errors).toBeDefined();
+      expect(body.message).toBeDefined();
       expect(statusCode).toBe(422);
     });
   });
@@ -68,7 +68,7 @@ describe('User routes', () => {
 
       expect(body.success).toBe(false);
       expect(body.token).toBeUndefined();
-      expect(body.error).toBe(INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE);
+      expect(body.message).toBe(INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE);
       expect(statusCode).toBe(401);
     });
     it('should NOT login user with bad email format', async () => {
@@ -78,7 +78,7 @@ describe('User routes', () => {
 
       expect(body.success).toBe(false);
       expect(body.token).toBeUndefined();
-      expect(body.errors).toBeDefined();
+      expect(body.message).toBeDefined();
       expect(statusCode).toBe(422);
     });
     it('should NOT login user with wrong password', async () => {
@@ -88,7 +88,7 @@ describe('User routes', () => {
 
       expect(body.success).toBe(false);
       expect(body.token).toBeUndefined();
-      expect(body.error).toBe(INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE);
+      expect(body.message).toBe(INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE);
       expect(statusCode).toBe(401);
     });
   });
@@ -150,7 +150,7 @@ describe('User routes', () => {
         .send({ email: nonExistingEmail });
 
       expect(body.success).toBe(false);
-      expect(body.error).toBe(USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE);
+      expect(body.message).toBe(USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE);
       expect(statusCode).toBe(404);
     });
     it('should send email to user with correct email', async () => {

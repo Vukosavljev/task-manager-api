@@ -16,5 +16,6 @@ module.exports = {
     '^@utils': '<rootDir>/src/utils/$1',
     '^@validators': '<rootDir>/src/validators/$1',
     '^@middlewares': '<rootDir>/src/middlewares/$1',
+    '^@types': '<rootDir>/src/types/$1',
   },
 };

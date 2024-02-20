@@ -1,0 +1,5 @@
+export const HTTP_STATUS_CODES = {
+  DEFAULT: 500,
+  NOT_FOUND: 404,
+  UNAUTHORIZED: 401,
+};

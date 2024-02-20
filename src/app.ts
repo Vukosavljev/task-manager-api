@@ -1,10 +1,11 @@
 import bodyParser from 'body-parser';
 import { config } from 'dotenv';
 import express, { NextFunction, Response } from 'express';
-import path from 'path';
+
 import { IUserInfoRequest } from '@types';
 import { taskRoutes, userRoutes } from '@routes';
 import { connectToDB } from '@utils';
+import { errorHandler } from '@middlewares';
 
 config({ path: './config/config.env' });
 export const app = express();
@@ -23,9 +24,7 @@ app.use((_: IUserInfoRequest, res: Response, next: NextFunction) => {
 
 app.use('/api/tasks', taskRoutes);
 app.use('/api/users', userRoutes);
-app.use((_: IUserInfoRequest, res: Response) => {
-  res.status(404).sendFile(path.join(__dirname, './views', '404.html'));
-});
+app.use(errorHandler);
 
 (async () => {
   const { PORT, NODE_ENV } = process.env;

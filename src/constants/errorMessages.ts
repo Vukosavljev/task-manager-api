@@ -14,3 +14,4 @@ export const USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE =
   "Sorry user with this email doesn't exist.";
 export const INVALID_RESET_TOKEN_ERROR_MESSAGE =
   'Password reset token is invalid.';
+export const DEFAULT_HTTP_ERROR_MESSAGE = 'Something went wrong!';
