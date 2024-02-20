@@ -1,43 +1,42 @@
 import { Router } from 'express';
 import * as UserController from '@controllers';
-import {
-  loginEmailValidators,
-  nameValidators,
-  passwordValidators,
-  registerEmailValidators,
-} from '@validators';
-import { validate } from '@middlewares';
+import { emailShape, nameShape, passwordShape, uniqueEmail } from '@validators';
+import { passwordMatch, userEmailExist, validate } from '@middlewares';
 
 const router = Router();
 
 router.post(
   '/register',
-  [nameValidators, registerEmailValidators, passwordValidators],
+  [nameShape, emailShape, uniqueEmail, passwordShape],
   validate,
   UserController.register
 );
 router.post(
   '/login',
-  [loginEmailValidators, passwordValidators],
+  [emailShape, passwordShape],
   validate,
+  userEmailExist,
+  passwordMatch,
   UserController.login
 );
 router.get('/logout', UserController.logout);
 router.delete(
   '/remove',
-  [loginEmailValidators, passwordValidators],
+  [emailShape, passwordShape],
   validate,
+  userEmailExist,
+  passwordMatch,
   UserController.remove
 );
 router.post(
   '/forgot-password',
-  [loginEmailValidators],
+  [emailShape],
   validate,
   UserController.forgotPassword
 );
 router.post(
   '/reset-password/:token',
-  [passwordValidators],
+  [passwordShape],
   validate,
   UserController.resetPassword
 );

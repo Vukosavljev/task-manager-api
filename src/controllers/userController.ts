@@ -11,7 +11,6 @@ import {
 } from '@types';
 import {
   HTTP_STATUS_CODES,
-  INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE,
   INVALID_RESET_TOKEN_ERROR_MESSAGE,
   LOGGED_OUT_SUCCESS_MESSAGE,
   USER_DELETE_SUCCESS_MESSAGE,
@@ -39,30 +38,9 @@ export const register = async (
 
 export const login = async (
   req: IUserInfoRequest<object, object, RequestLoginBody>,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
-  const { email, password } = req.body;
-
-  const user = await User.findOne({ email }).select('+password');
-  if (!user)
-    return next(
-      new HttpException(
-        INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE,
-        HTTP_STATUS_CODES.UNAUTHORIZED
-      )
-    );
-
-  const isPasswordCorrect = await user.comparePassword(password);
-  if (!isPasswordCorrect)
-    return next(
-      new HttpException(
-        INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE,
-        HTTP_STATUS_CODES.UNAUTHORIZED
-      )
-    );
-
-  sendToken(user, 200, res);
+  sendToken(req.user, 200, res);
 };
 
 export const logout = async (_: IUserInfoRequest, res: Response) => {
@@ -77,20 +55,7 @@ export const remove = async (
   req: IUserInfoRequest<object, object, RequestRemoveUserBody>,
   res: Response
 ) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email }).select('+password');
-  if (!user) {
-    return res
-      .status(401)
-      .json({ success: false, error: INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE });
-  }
-
-  const isPasswordCorrect = await user.comparePassword(password);
-  if (!isPasswordCorrect) {
-    return res
-      .status(401)
-      .json({ success: false, error: INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE });
-  }
+  const user = req.user;
 
   try {
     await user.deleteOne();
@@ -148,7 +113,8 @@ export const resetPassword = async (
     object,
     RequestResetPasswordBody
   >,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   const { password } = req.body;
   const { token } = req.params;
@@ -159,17 +125,17 @@ export const resetPassword = async (
     resetPasswordExpire: { $gt: Date.now() },
   });
 
-  if (!user) {
-    return res
-      .status(400)
-      .json({ success: false, message: INVALID_RESET_TOKEN_ERROR_MESSAGE });
-  }
+  if (!user)
+    return next(
+      new HttpException(
+        INVALID_RESET_TOKEN_ERROR_MESSAGE,
+        HTTP_STATUS_CODES.BAD_REQUEST
+      )
+    );
 
   user.password = password;
   user.resetPasswordToken = undefined;
   user.resetPasswordExpire = undefined;
 
   await user.save();
-
-  sendToken(user, 200, res);
 };

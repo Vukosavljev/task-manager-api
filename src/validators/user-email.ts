@@ -6,19 +6,12 @@ import {
 } from '@constants';
 import { User } from '@models';
 
-export const registerEmailValidators = body('email')
-  .trim()
-  .normalizeEmail()
-  .isEmail()
-  .withMessage(EMAIL_VALIDITY_ERROR_MESSAGE)
-  .notEmpty()
-  .withMessage(EMAIL_REQUIRED_ERROR_MESSAGE)
-  .custom(async (email: string) => {
-    const user = await User.findOne({ email });
-    if (user) return Promise.reject(EMAIL_EXIST_ERROR_MESSAGE);
-  });
+export const uniqueEmail = body('email').custom(async (email: string) => {
+  const user = await User.findOne({ email });
+  if (user) return Promise.reject(EMAIL_EXIST_ERROR_MESSAGE);
+});
 
-export const loginEmailValidators = body('email')
+export const emailShape = body('email')
   .trim()
   .normalizeEmail()
   .isEmail()

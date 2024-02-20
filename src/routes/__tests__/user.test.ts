@@ -123,7 +123,7 @@ describe('User routes', () => {
         .send({ email: nonExistingEmail, password: userDataMock.password });
 
       expect(body.success).toBe(false);
-      expect(body.error).toBe(INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE);
+      expect(body.message).toBe(INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE);
       expect(statusCode).toBe(401);
     });
     it('should NOT delete user with wrong password', async () => {
