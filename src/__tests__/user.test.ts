@@ -7,16 +7,13 @@ import {
   USER_CREATED_SUCCESS_MESSAGE,
   USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE,
 } from '@constants';
-import { app } from '../../app';
-
-const userDataMock = {
-  name: 'User name test',
-  email: 'testing@gmail.com',
-  password: 'userForTestingPassword',
-};
-const nonExistingEmail = 'nonExisting@gmail.com';
-const wrongPassword = 'wrongPasswordExample';
-const newValidPassword = 'NewValidPassword';
+import {
+  newValidPassword,
+  nonExistingEmail,
+  userDataMock,
+  wrongPassword,
+} from './mocks/userData';
+import { app } from '../app';
 
 describe('User routes', () => {
   describe('/api/users/register POST', () => {
