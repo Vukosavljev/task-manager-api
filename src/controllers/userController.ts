@@ -13,6 +13,7 @@ import {
   HTTP_STATUS_CODES,
   INVALID_RESET_TOKEN_ERROR_MESSAGE,
   LOGGED_OUT_SUCCESS_MESSAGE,
+  USER_CREATED_SUCCESS_MESSAGE,
   USER_DELETE_SUCCESS_MESSAGE,
   USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE,
 } from '@constants';
@@ -26,10 +27,13 @@ export const register = async (
   const { name, email, password } = req.body;
 
   try {
-    const user = await User.create({ name, email, password });
-    sendToken(user, 201, res);
+    await User.create({ name, email, password });
+    res.status(HTTP_STATUS_CODES.CREATED).json({
+      success: true,
+      message: USER_CREATED_SUCCESS_MESSAGE,
+    });
   } catch (error) {
-    res.status(400).json({
+    res.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: error,
     });
@@ -40,7 +44,7 @@ export const login = async (
   req: IUserInfoRequest<object, object, RequestLoginBody>,
   res: Response
 ) => {
-  sendToken(req.user, 200, res);
+  sendToken(req.user, HTTP_STATUS_CODES.OK, res);
 };
 
 export const logout = async (_: IUserInfoRequest, res: Response) => {
@@ -48,7 +52,9 @@ export const logout = async (_: IUserInfoRequest, res: Response) => {
     expires: new Date(Date.now()),
     httpOnly: true,
   });
-  res.status(200).json({ success: true, message: LOGGED_OUT_SUCCESS_MESSAGE });
+  res
+    .status(HTTP_STATUS_CODES.OK)
+    .json({ success: true, message: LOGGED_OUT_SUCCESS_MESSAGE });
 };
 
 export const remove = async (
@@ -56,11 +62,15 @@ export const remove = async (
   res: Response
 ) => {
   const user = req.user;
+  res.cookie('token', 'none', {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+  });
 
   try {
     await user.deleteOne();
     return res
-      .status(200)
+      .status(HTTP_STATUS_CODES.OK)
       .json({ success: true, message: USER_DELETE_SUCCESS_MESSAGE });
   } catch (error) {
     res.json({ success: false, error });
