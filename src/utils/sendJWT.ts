@@ -12,12 +12,13 @@ export const sendToken = (
     expires: new Date(Date.now() + +COOKIE_EXPIRES_TIME * 24 * 60 * 60 * 1000),
     httpOnly: true,
   };
+  // Check why cookie is not readable
+  // res.cookie('token', token, options);
 
   if (NODE_ENV === 'prod') options.secure = true;
 
-  res.status(statusCode).cookie('token', token, options).json({
+  return res.status(statusCode).json({
     success: true,
     token,
   });
-  return;
 };

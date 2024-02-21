@@ -1,26 +1,18 @@
 import bodyParser from 'body-parser';
+import cors from 'cors';
 import { config } from 'dotenv';
-import express, { NextFunction, Response } from 'express';
+import express from 'express';
 
-import { IUserInfoRequest } from '@types';
+import { errorHandler } from '@middlewares';
 import { taskRoutes, userRoutes } from '@routes';
 import { connectToDB } from '@utils';
-import { errorHandler } from '@middlewares';
 
 config({ path: './config/config.env' });
 export const app = express();
 
 app.use(bodyParser.json());
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use((_: IUserInfoRequest, res: Response, next: NextFunction) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'OPTIONS, GET, POST, PUT, PATCH, DELETE'
-  );
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-});
 
 app.use('/api/tasks', taskRoutes);
 app.use('/api/users', userRoutes);
