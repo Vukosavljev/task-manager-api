@@ -1,3 +1,3 @@
 export * from './errorMessages';
-export * from './errorCodes';
+export * from './statusCodes';
 export * from './successMessages';

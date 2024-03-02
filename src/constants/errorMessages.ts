@@ -17,3 +17,4 @@ export const INVALID_RESET_TOKEN_ERROR_MESSAGE =
 export const DEFAULT_HTTP_ERROR_MESSAGE = 'Something went wrong!';
 export const INVALID_RESOURCE_ID_ERROR_MESSAGE =
   "Sorry resource with this id doesn't exist";
+export const TASK_NOT_FOUND_ERROR_MESSAGE = 'Task was not found.';
