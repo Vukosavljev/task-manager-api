@@ -1,15 +1,20 @@
 import { Router } from 'express';
 import * as TaskController from '@controllers';
-import { isAuthenticated } from '@middlewares';
+import { isAuthenticated, validateMongoId } from '@middlewares';
 import { titleValidators } from '@validators';
 
 const router = Router();
 
 router.use(isAuthenticated);
-router.get('/:id', TaskController.getTask);
+router.get('/:id', validateMongoId, TaskController.getTask);
 router.get('/', TaskController.getTasks);
 router.post('/', [titleValidators], TaskController.createTask);
-router.patch('/:id', [titleValidators], TaskController.updateTask);
-router.delete('/:id', TaskController.deleteTask);
+router.patch(
+  '/:id',
+  [titleValidators],
+  validateMongoId,
+  TaskController.updateTask
+);
+router.delete('/:id', validateMongoId, TaskController.deleteTask);
 
 export default router;

@@ -1,10 +1,11 @@
 import { Response } from 'express';
+import mongoose from 'mongoose';
 import {
   IUserInfoRequest,
   RequestCreateTaskBody,
   RequestTaskParams,
 } from '@types';
-import { Task } from '@models';
+import { Task, TaskModel } from '@models';
 
 export const getTasks = async (req: IUserInfoRequest, res: Response) => {
   const task = await Task.find({ userId: req.user._id });
@@ -45,21 +46,29 @@ export const createTask = async (
 };
 
 export const updateTask = async (
-  req: IUserInfoRequest<RequestTaskParams>,
+  req: IUserInfoRequest<RequestTaskParams, object, TaskModel>,
   res: Response
 ) => {
   const {
-    // body: { title, description },
+    body: { title, description },
     params: { id },
   } = req;
+
+  try {
+    const task = await Task.findOne({ _id: id, userId: req.user._id });
+    console.log(task);
+    if (!task) return;
+    task.title = title;
+    task.description = description;
+    await task.save();
+    res.status(200).json({
+      success: true,
+      data: task,
+    });
+  } catch (error) {
+    res.json({ success: false, error });
+  }
   // { title, description }
-  const task = await Task.find({ _id: id, userId: req.user._id });
-  // What to do when we don't find task with id and userId
-  console.log(task);
-  res.status(200).json({
-    success: true,
-    data: task,
-  });
 };
 
 export const deleteTask = async (

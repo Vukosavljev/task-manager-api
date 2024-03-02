@@ -15,3 +15,5 @@ export const USER_WITH_EMAIL_NOT_FOUND_ERROR_MESSAGE =
 export const INVALID_RESET_TOKEN_ERROR_MESSAGE =
   'Password reset token is invalid.';
 export const DEFAULT_HTTP_ERROR_MESSAGE = 'Something went wrong!';
+export const INVALID_RESOURCE_ID_ERROR_MESSAGE =
+  "Sorry resource with this id doesn't exist";
